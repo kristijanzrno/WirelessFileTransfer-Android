@@ -8,17 +8,32 @@
     android:layout_margin="15dp">
 
     <TextView
-        android:id="@+id/desktopIPTV"
+        android:id="@+id/desktopIPTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Desktop IP:"
         android:layout_centerHorizontal="true"/>
 
-    <EditText
-        android:id="@+id/serverIP"
-        android:layout_below="@+id/desktopIPTV"
+    <RelativeLayout
+        android:id="@+id/connectView"
+        android:layout_below="@+id/desktopIPTextView"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"/>
+        android:layout_height="wrap_content">
+        <Button
+            android:id="@+id/connectButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Connect"
+            android:onClick="connect"
+            android:layout_alignParentRight="true"/>
+
+        <EditText
+            android:id="@+id/serverIP"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_toLeftOf="@id/connectButton"/>
+
+    </RelativeLayout>
 
     <RelativeLayout
         android:id="@+id/sendView"
@@ -30,7 +45,8 @@
             android:layout_width="60dp"
             android:layout_height="wrap_content"
             android:text="Send"
-            android:layout_alignParentRight="true"/>
+            android:layout_alignParentRight="true"
+            android:onClick="send"/>
 
         <EditText
             android:id="@+id/message"
@@ -42,11 +58,12 @@
 
     <EditText
         android:layout_above="@+id/sendView"
-        android:layout_below="@id/serverIP"
+        android:layout_below="@id/connectView"
         android:id="@+id/conversation"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:clickable="false"
-        android:enabled="false"/>
+        android:enabled="false"
+        />
 
 </RelativeLayout>
