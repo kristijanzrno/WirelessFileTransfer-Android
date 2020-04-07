@@ -11,7 +11,7 @@ import java.io.IOException;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements SendToActivity {
    @BindView(R.id.conversation)
    EditText conversation;
    @BindView(R.id.serverIP)
@@ -30,20 +30,23 @@ public class MainActivity extends AppCompatActivity {
 
 
     public void connect(View v){
-        connectionHandler = new ConnectionHandler(desktopIP.getText().toString(), 9270);
+        connectionHandler = new ConnectionHandler(desktopIP.getText().toString(), 9270, this);
         connectionHandler.execute();
-        if(connectionHandler != null)
-            conversation.append("Connected");
-        else
-            conversation.append("Could not connect to the desktop app");
     }
 
     public void send(View v){
         if(connectionHandler != null) {
             String message = messageText.getText().toString();
             connectionHandler.send(message);
-            conversation.append(message);
+            conversation.append("\n" + message);
+            messageText.setText("");
         }
 
     }
+
+    @Override
+    public void sendMessage(String message){
+        conversation.append("\n" + message);
+    }
+
 }
