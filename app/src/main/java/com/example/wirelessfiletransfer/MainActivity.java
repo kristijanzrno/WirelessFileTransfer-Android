@@ -26,6 +26,8 @@ public class MainActivity extends AppCompatActivity implements SendToActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
+        desktopIP.setText("192.168.1.13");
+        connect(null);
     }
 
 
