@@ -12,8 +12,10 @@ import java.util.Enumeration;
 
 public class Discovery extends AsyncTask<String, String, String> {
 
-    public Discovery(){
+    DiscoveryUtils discoveryUtils;
 
+    public Discovery(DiscoveryUtils discoveryUtils){
+        this.discoveryUtils = discoveryUtils;
     }
 
     @Override
@@ -56,7 +58,6 @@ public class Discovery extends AsyncTask<String, String, String> {
                     byte[] receiveBuffer = new byte[15000];
                     DatagramPacket receivePacket = new DatagramPacket(receiveBuffer, receiveBuffer.length);
                     socket.receive(receivePacket);
-
                     System.out.println("response: \n");
                     String message = new String(receivePacket.getData()).trim();
                     if (message.startsWith("disc_")) {
@@ -64,6 +65,7 @@ public class Discovery extends AsyncTask<String, String, String> {
                         String ip = receivePacket.getSocketAddress().toString();
                         String port = message.split("::")[1];
                         System.out.println("IP: " + ip + "\n" + "Port: " + port);
+                        discoveryUtils.onDeviceDiscovered(ip, port, message);
                     }
                 }
             } catch (SocketException e) {
