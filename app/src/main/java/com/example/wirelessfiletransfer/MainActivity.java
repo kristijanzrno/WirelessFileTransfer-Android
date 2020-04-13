@@ -6,6 +6,8 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.EditText;
 
+import com.example.wirelessfiletransfer.Model.Device;
+
 import java.io.IOException;
 
 import butterknife.BindView;
@@ -26,12 +28,18 @@ public class MainActivity extends AppCompatActivity implements SendToActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
-        desktopIP.setText("192.168.1.13");
-        connect(null);
+        Device device = (Device) getIntent().getSerializableExtra("device");
+
+        desktopIP.setText(device.getIp());
+        establishConnection(device.getIp(), Integer.parseInt(device.getPort()));
     }
 
 
     public void connect(View v){
+        //establishConnection();
+    }
+
+    public void establishConnection(String ip, int port){
         connectionHandler = new ConnectionHandler(desktopIP.getText().toString(), 9270, this);
         connectionHandler.execute();
     }

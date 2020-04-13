@@ -19,13 +19,15 @@ public class SignalReceiver extends AsyncTask<String, String, String> {
     protected String doInBackground(String... strings) {
         try {
             while(true) {
+                if(isCancelled())
+                    break;
                 byte[] receiveBuffer = new byte[30000];
                 DatagramPacket receivePacket = new DatagramPacket(receiveBuffer, receiveBuffer.length);
                 socket.receive(receivePacket);
                 String message = new String(receivePacket.getData()).trim();
                 if (message.startsWith("disc_")) {
                     message = message.replace("disc_", "");
-                    String ip = receivePacket.getSocketAddress().toString();
+                    String ip = receivePacket.getSocketAddress().toString().split(":")[0];
                     String port = message.split("::")[1];
                     System.out.println("IP: " + ip + "\n" + "Port: " + port);
                     discoveryUtils.onDeviceDiscovered(ip, port, message);

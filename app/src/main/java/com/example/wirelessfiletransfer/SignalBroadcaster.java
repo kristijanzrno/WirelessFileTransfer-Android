@@ -25,6 +25,10 @@ public class SignalBroadcaster extends AsyncTask<String, String, String> {
         try {
             socket.setBroadcast(true);
             while(true) {
+                if(isCancelled()) {
+                    System.out.println("bg cancelled");
+                    break;
+                }
                 byte[] discoveryRequest = ("discovery@"+localReceiverPort).getBytes();
                 DatagramPacket packet = new DatagramPacket(discoveryRequest, discoveryRequest.length, InetAddress.getByName("255.255.255.255"), 8899);
                 socket.send(packet);

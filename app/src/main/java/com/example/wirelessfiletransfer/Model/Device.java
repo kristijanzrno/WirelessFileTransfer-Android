@@ -1,6 +1,10 @@
 package com.example.wirelessfiletransfer.Model;
 
-public class Device {
+import androidx.annotation.NonNull;
+
+import java.io.Serializable;
+
+public class Device implements Serializable {
     private String name;
     private String ip;
     private String port;
@@ -55,5 +59,16 @@ public class Device {
 
     public void setInfo(String info) {
         this.info = info;
+    }
+
+    public boolean isAvailable(){
+        return available.equals("Available");
+    }
+
+
+    @NonNull
+    @Override
+    public String toString() {
+        return "Device [name="+name+", ip="+ip+", port="+port+", available="+available+", info="+info+"]";
     }
 }

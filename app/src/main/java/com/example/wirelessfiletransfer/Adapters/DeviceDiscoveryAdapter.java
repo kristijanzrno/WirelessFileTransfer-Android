@@ -8,6 +8,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.wirelessfiletransfer.DiscoveryUtils;
 import com.example.wirelessfiletransfer.Model.Device;
 import com.example.wirelessfiletransfer.R;
 
@@ -19,9 +20,11 @@ import butterknife.ButterKnife;
 public class DeviceDiscoveryAdapter extends RecyclerView.Adapter<DeviceDiscoveryAdapter.ViewHolder> {
 
     private ArrayList<Device> devices;
+    private DiscoveryUtils discoveryUtils;
 
-    public DeviceDiscoveryAdapter(ArrayList<Device> devices) {
+    public DeviceDiscoveryAdapter(ArrayList<Device> devices, DiscoveryUtils discoveryUtils) {
         this.devices = devices;
+        this.discoveryUtils = discoveryUtils;
     }
 
     @NonNull
@@ -33,6 +36,13 @@ public class DeviceDiscoveryAdapter extends RecyclerView.Adapter<DeviceDiscovery
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
+        holder.itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                System.out.println("hello");
+                discoveryUtils.onDeviceSelected(devices.get(position));
+            }
+        });
         holder.deviceIP.setText(devices.get(position).getIp());
     }
 
@@ -50,5 +60,7 @@ public class DeviceDiscoveryAdapter extends RecyclerView.Adapter<DeviceDiscovery
             super(itemView);
             ButterKnife.bind(this, itemView);
         }
+
+
     }
 }

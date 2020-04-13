@@ -4,6 +4,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 
@@ -23,30 +24,29 @@ public class DeviceDiscovery extends AppCompatActivity implements DiscoveryUtils
     private ArrayList<Device> devices = new ArrayList<>();
     private DeviceDiscoveryAdapter adapter;
 
-    private SignalBroadcaster broadcaster;
-    private SignalReceiver receiver;
+    private DiscoveryService discoveryService;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_device_discovery);
         setUI();
-        setupDiscovery();
+        startDiscovery();
     }
 
-    private void setupDiscovery(){
+    private void startDiscovery(){
         try {
-            DiscoveryService discoveryService = new DiscoveryService(this);
+            if(discoveryService == null)
+                discoveryService = new DiscoveryService(this);
             discoveryService.start();
         }catch (Exception e){
             e.printStackTrace();
         }
-
     }
 
     private void setUI(){
         ButterKnife.bind(this);
-        adapter = new DeviceDiscoveryAdapter(devices);
+        adapter = new DeviceDiscoveryAdapter(devices, this);
         discoveryRecyclerView.setLayoutManager(new LinearLayoutManager(this));
         discoveryRecyclerView.setAdapter(adapter);
     }
@@ -54,12 +54,36 @@ public class DeviceDiscovery extends AppCompatActivity implements DiscoveryUtils
     public void onDeviceDiscovered(java.lang.String ip, java.lang.String port, java.lang.String info) {
         // Will have to change it to test ip, cause device might change port
         // todo
-        Device discoveredDevice = new Device("test", ip, port, "availableTest", "additionalInfo");
-        if(!(devices.stream().anyMatch(o -> o.getIp().equals(ip)))) {
+        System.out.println(ip);
+        final String formattedIP = ip.replaceAll("[^\\d.]", "");
+        final String formattedPort = port.replaceAll("[^\\d.]", "");
+        Device discoveredDevice = new Device("test", formattedIP, formattedPort, "Available", "additionalInfo");
+        if(!(devices.stream().anyMatch(o -> o.getIp().equals(formattedIP)))) {
             devices.add(discoveredDevice);
         }
         runOnUiThread(() -> adapter.notifyDataSetChanged());
     }
 
+    @Override
+    public void onDeviceSelected(Device device) {
+        if(device.isAvailable()) {
+            Intent i = new Intent(DeviceDiscovery.this, MainActivity.class);
+            i.putExtra("device", device);
+            startActivity(i);
+        }
+    }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        startDiscovery();
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        System.out.println("pausing...");
+        if(discoveryService != null)
+            discoveryService.stop();
+    }
 }
