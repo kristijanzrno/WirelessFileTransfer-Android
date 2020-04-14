@@ -1,22 +1,24 @@
-package com.example.wirelessfiletransfer;
+package com.example.wirelessfiletransfer.Activities;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Intent;
-import android.os.AsyncTask;
 import android.os.Bundle;
 
 import com.example.wirelessfiletransfer.Adapters.DeviceDiscoveryAdapter;
+import com.example.wirelessfiletransfer.DiscoveryService;
+import com.example.wirelessfiletransfer.DiscoveryUtils;
 import com.example.wirelessfiletransfer.Model.Device;
+import com.example.wirelessfiletransfer.R;
 
 import java.util.ArrayList;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class DeviceDiscovery extends AppCompatActivity implements DiscoveryUtils{
+public class DeviceDiscovery extends AppCompatActivity implements DiscoveryUtils {
 
     @BindView(R.id.discoveryRecyclerView)
     RecyclerView discoveryRecyclerView;
@@ -54,7 +56,6 @@ public class DeviceDiscovery extends AppCompatActivity implements DiscoveryUtils
     public void onDeviceDiscovered(java.lang.String ip, java.lang.String port, java.lang.String info) {
         // Will have to change it to test ip, cause device might change port
         // todo
-        System.out.println(ip);
         final String formattedIP = ip.replaceAll("[^\\d.]", "");
         final String formattedPort = port.replaceAll("[^\\d.]", "");
         Device discoveredDevice = new Device("test", formattedIP, formattedPort, "Available", "additionalInfo");
@@ -67,7 +68,7 @@ public class DeviceDiscovery extends AppCompatActivity implements DiscoveryUtils
     @Override
     public void onDeviceSelected(Device device) {
         if(device.isAvailable()) {
-            Intent i = new Intent(DeviceDiscovery.this, MainActivity.class);
+            Intent i = new Intent(DeviceDiscovery.this, FileTransfer.class);
             i.putExtra("device", device);
             startActivity(i);
         }
