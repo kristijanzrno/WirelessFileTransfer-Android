@@ -30,7 +30,10 @@ public class SignalReceiver extends AsyncTask<String, String, String> {
                     String ip = receivePacket.getSocketAddress().toString().split(":")[0];
                     String port = message.split("::")[1];
                     System.out.println("IP: " + ip + "\n" + "Port: " + port);
-                    discoveryUtils.onDeviceDiscovered(ip, port, message);
+                    ip = ip.replaceAll("[^\\d.]", "");
+                    port = port.replaceAll("[^\\d.]", "");
+
+                    discoveryUtils.onDeviceDiscovered(ip, Integer.parseInt(port), message);
                 }
             }
         }catch (Exception e){

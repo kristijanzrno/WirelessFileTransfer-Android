@@ -53,13 +53,11 @@ public class DeviceDiscovery extends AppCompatActivity implements DiscoveryUtils
         discoveryRecyclerView.setAdapter(adapter);
     }
     @Override
-    public void onDeviceDiscovered(java.lang.String ip, java.lang.String port, java.lang.String info) {
+    public void onDeviceDiscovered(java.lang.String ip, int port, java.lang.String info) {
         // Will have to change it to test ip, cause device might change port
         // todo
-        final String formattedIP = ip.replaceAll("[^\\d.]", "");
-        final String formattedPort = port.replaceAll("[^\\d.]", "");
-        Device discoveredDevice = new Device("test", formattedIP, formattedPort, "Available", "additionalInfo");
-        if(!(devices.stream().anyMatch(o -> o.getIp().equals(formattedIP)))) {
+        Device discoveredDevice = new Device("test", ip, port, "Available", "additionalInfo");
+        if(!(devices.stream().anyMatch(o -> o.getIp().equals(ip)))) {
             devices.add(discoveredDevice);
         }
         runOnUiThread(() -> adapter.notifyDataSetChanged());

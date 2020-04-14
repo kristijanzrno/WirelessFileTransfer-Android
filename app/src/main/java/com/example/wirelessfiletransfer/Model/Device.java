@@ -7,13 +7,13 @@ import java.io.Serializable;
 public class Device implements Serializable {
     private String name;
     private String ip;
-    private String port;
+    private int port;
     private String available;
     private String info;
 
     public Device(){}
 
-    public Device(String name, String ip, String port, String available, String info) {
+    public Device(String name, String ip, int port, String available, String info) {
         this.name = name;
         this.ip = ip;
         this.port = port;
@@ -37,11 +37,11 @@ public class Device implements Serializable {
         this.ip = ip;
     }
 
-    public String getPort() {
+    public int getPort() {
         return port;
     }
 
-    public void setPort(String port) {
+    public void setPort(int port) {
         this.port = port;
     }
 

@@ -31,7 +31,7 @@ public class MainActivity extends AppCompatActivity implements SendToActivity {
         Device device = (Device) getIntent().getSerializableExtra("device");
 
         desktopIP.setText(device.getIp());
-        establishConnection(device.getIp(), Integer.parseInt(device.getPort()));
+        establishConnection(device.getIp(), device.getPort());
     }
 
 
