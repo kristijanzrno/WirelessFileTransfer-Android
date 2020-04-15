@@ -26,18 +26,12 @@ public class ConnectionUtils {
 
     public void transferFiles(ArrayList<Uri> uris){
         // Preparing the server to receive n files
-        connectionHandler.send(Constants.FILE_SEND_MESSAGE + uris.size());
+        connectionHandler.sendMessage(Constants.FILE_SEND_MESSAGE + Constants.DATA_SEPARATOR + uris.size());
         for(Uri uri : uris){
-            connectionHandler.send(Constants.FILE_NAME_MESSAGE + FileUtils.getFileName(uri, parent));
+            String filename = FileUtils.getFileName(uri, parent);
+            long fileSize = FileUtils.getFileSize(uri, parent);
+            connectionHandler.sendFile(Constants.FILE_NAME_MESSAGE + Constants.DATA_SEPARATOR + filename + Constants.DATA_SEPARATOR + fileSize, uri);
         }
-    }
-
-    public void receiveFiles(){
-        //file handler
-    }
-
-    private void sendFile(){
-
     }
 
 }

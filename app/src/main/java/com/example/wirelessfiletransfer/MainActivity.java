@@ -47,7 +47,7 @@ public class MainActivity extends AppCompatActivity implements SendToActivity {
     public void send(View v){
         if(connectionHandler != null) {
             String message = messageText.getText().toString();
-            connectionHandler.send(message);
+            connectionHandler.sendMessage(message);
             conversation.append("\n" + message);
             messageText.setText("");
         }

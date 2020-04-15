@@ -29,4 +29,14 @@ public class FileUtils {
         }
         return result;
     }
+
+    // https://developer.android.com/training/secure-file-sharing/retrieve-info#java
+    public static long getFileSize(Uri uri, Activity activity){
+        long result = 0;
+        Cursor cursor = activity.getContentResolver().query(uri, null, null, null, null);
+        if(cursor != null && cursor.moveToFirst()){
+            result = cursor.getLong(cursor.getColumnIndex(OpenableColumns.SIZE));
+       }
+        return result;
+    }
 }
