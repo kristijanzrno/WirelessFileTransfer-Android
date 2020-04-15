@@ -1,8 +1,11 @@
 package com.example.wirelessfiletransfer.Utils;
 
 import android.app.Activity;
+import android.content.Context;
 import android.database.Cursor;
 import android.net.Uri;
+import android.os.Build;
+import android.os.Environment;
 import android.provider.OpenableColumns;
 
 public class FileUtils {
@@ -34,9 +37,23 @@ public class FileUtils {
     public static long getFileSize(Uri uri, Activity activity){
         long result = 0;
         Cursor cursor = activity.getContentResolver().query(uri, null, null, null, null);
-        if(cursor != null && cursor.moveToFirst()){
+        if(cursor != null && cursor.moveToFirst())
             result = cursor.getLong(cursor.getColumnIndex(OpenableColumns.SIZE));
-       }
         return result;
+    }
+
+    public static String getStoragePath(Context context){
+        String storagePath = "";
+        // Android 10 makes it harder to access the root of the internal storage,
+        // The only initial file access point is the application directory
+        // Therefore, the application directory needs to be exited couple of times to get to the root
+        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q){
+            storagePath = context.getExternalFilesDir(null).getParentFile().
+                    getParentFile().getParentFile().getParentFile().getAbsolutePath();
+        }else{
+            // Else use the old convenient Environment
+            storagePath = Environment.getExternalStorageDirectory().getAbsolutePath();
+        }
+        return storagePath;
     }
 }
