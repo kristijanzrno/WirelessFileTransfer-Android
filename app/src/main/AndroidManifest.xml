@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.example.wirelessfiletransfer">
+    package="com.example.wirelessfiletransfer" >
 
     <uses-permission
         android:name="android.permission.ACCESS_FINE_LOCATION"
@@ -16,21 +16,23 @@
         android:required="true" />
     <uses-permission
         android:name="android.permission.WRITE_EXTERNAL_STORAGE"
-        android:required="true"/>
+        android:required="true" />
     <uses-permission
         android:name="android.permission.READ_EXTERNAL_STORAGE"
-        android:required="true"/>
+        android:required="true" />
 
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
+        android:requestLegacyExternalStorage="true"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/AppTheme"
-        android:requestLegacyExternalStorage="true">
-        <activity android:name=".Activities.FileTransfer"></activity>
-        <activity android:name=".Activities.DeviceDiscovery">
+        android:theme="@style/AppTheme" >
+        <activity android:name=".Activities.Settings" >
+        </activity>
+        <activity android:name=".Activities.FileTransfer" />
+        <activity android:name=".Activities.DeviceDiscovery" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

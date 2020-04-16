@@ -7,4 +7,18 @@ public class Constants {
     public static final String FILE_NAME_MESSAGE = "_filename";
     public static final String DATA_SEPARATOR = ":";
 
+
+
+    // Shared Preferences Keys
+    public static final String DEF_IMAGES = "Images";
+    public static final String DEF_AUDIO = "Audio";
+    public static final String DEF_VIDEOS = "Videos";
+    public static final String DEF_DOCUMENTS = "Documents";
+    public static final String DEF_OTHER = "Other";
+    public static final String KEY_IMAGES = "imagePath";
+    public static final String KEY_AUDIO = "audioPath";
+    public static final String KEY_VIDEOS  = "videosPath";
+    public static final String KEY_DOCUMENTS = "documentsPath";
+    public static final String KEY_OTHER = "otherPath";
+    public static final String PREFERENCES_KEY = "default";
 }

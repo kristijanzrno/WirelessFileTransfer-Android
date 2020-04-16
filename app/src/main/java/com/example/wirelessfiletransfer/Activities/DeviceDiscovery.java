@@ -8,10 +8,12 @@ import android.content.Intent;
 import android.os.Bundle;
 
 import com.example.wirelessfiletransfer.Adapters.DeviceDiscoveryAdapter;
+import com.example.wirelessfiletransfer.Constants;
 import com.example.wirelessfiletransfer.DiscoveryService;
 import com.example.wirelessfiletransfer.DiscoveryUtils;
 import com.example.wirelessfiletransfer.Model.Device;
 import com.example.wirelessfiletransfer.R;
+import com.example.wirelessfiletransfer.Utils.PathFinder;
 
 import java.util.ArrayList;
 
@@ -34,6 +36,13 @@ public class DeviceDiscovery extends AppCompatActivity implements DiscoveryUtils
         setContentView(R.layout.activity_device_discovery);
         setUI();
         startDiscovery();
+        System.out.println(PathFinder.findPath(this, "test.png", getSharedPreferences(Constants.PREFERENCES_KEY, MODE_PRIVATE)));
+        System.out.println(PathFinder.findPath(this, "vid.mp4", getSharedPreferences(Constants.PREFERENCES_KEY, MODE_PRIVATE)));
+        System.out.println(PathFinder.findPath(this, "test.pdf", getSharedPreferences(Constants.PREFERENCES_KEY, MODE_PRIVATE)));
+        System.out.println(PathFinder.findPath(this, "test2.asdg", getSharedPreferences(Constants.PREFERENCES_KEY, MODE_PRIVATE)));
+        System.out.println(PathFinder.findPath(this, "test.mp3", getSharedPreferences(Constants.PREFERENCES_KEY, MODE_PRIVATE)));
+
+
     }
 
     private void startDiscovery(){

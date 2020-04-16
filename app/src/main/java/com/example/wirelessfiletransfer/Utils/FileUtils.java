@@ -1,12 +1,14 @@
 package com.example.wirelessfiletransfer.Utils;
 
 import android.app.Activity;
+import android.content.ContentResolver;
 import android.content.Context;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Environment;
 import android.provider.OpenableColumns;
+import android.webkit.MimeTypeMap;
 
 public class FileUtils {
 
@@ -55,5 +57,13 @@ public class FileUtils {
             storagePath = Environment.getExternalStorageDirectory().getAbsolutePath();
         }
         return storagePath;
+    }
+
+    public static String getMimeType(String filename){
+        String mimeType = "";
+        int in = filename.lastIndexOf(".");
+        String extension = filename.substring(in + 1).toLowerCase();
+        mimeType = MimeTypeMap.getSingleton().getMimeTypeFromExtension(extension);
+        return mimeType;
     }
 }

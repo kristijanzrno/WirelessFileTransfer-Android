@@ -6,6 +6,7 @@ import android.os.AsyncTask;
 
 import com.example.wirelessfiletransfer.Model.Action;
 import com.example.wirelessfiletransfer.Utils.FileUtils;
+import com.example.wirelessfiletransfer.Utils.PathFinder;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
@@ -22,7 +23,6 @@ import java.util.Queue;
 public class ConnectionHandler extends AsyncTask<String, Void, Void> {
     private Activity activity;
     private Socket socket;
-
 
     private boolean isRunning = true;
     private SendToActivity sendToActivity;
