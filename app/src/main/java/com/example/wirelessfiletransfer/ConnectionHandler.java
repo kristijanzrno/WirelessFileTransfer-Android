@@ -5,6 +5,7 @@ import android.net.Uri;
 import android.os.AsyncTask;
 
 import com.example.wirelessfiletransfer.Model.Action;
+import com.example.wirelessfiletransfer.Utils.FileHandler;
 import com.example.wirelessfiletransfer.Utils.FileUtils;
 import com.example.wirelessfiletransfer.Utils.PathFinder;
 
@@ -65,7 +66,8 @@ public class ConnectionHandler extends AsyncTask<String, Void, Void> {
                             break;
                         case "send_file":
                             writeMessage(action.getMessage(), output);
-                            writeFile(action.getUri(), output);
+                            FileHandler.readFile(activity, action.getUri(), output);
+                            //writeFile(action.getUri(), output);
                             break;
                     }
                 }else{
@@ -86,7 +88,8 @@ public class ConnectionHandler extends AsyncTask<String, Void, Void> {
                     String filename = message[1];
                     long fileSize = Long.parseLong(message[2]);
                     System.out.println("Receiving " + filename + "...");
-                    receiveFile(filename, fileSize, input);
+                    FileHandler.writeFile(activity, filename, fileSize, input);
+                    //receiveFile(filename, fileSize, input);
                     break;
                 case Constants.FILE_SEND_COMPLETE_MESSAGE:
                     break;

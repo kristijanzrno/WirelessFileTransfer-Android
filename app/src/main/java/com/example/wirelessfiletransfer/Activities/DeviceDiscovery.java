@@ -36,13 +36,6 @@ public class DeviceDiscovery extends AppCompatActivity implements DiscoveryUtils
         setContentView(R.layout.activity_device_discovery);
         setUI();
         startDiscovery();
-        System.out.println(PathFinder.findPath(this, "test.png", getSharedPreferences(Constants.PREFERENCES_KEY, MODE_PRIVATE)));
-        System.out.println(PathFinder.findPath(this, "vid.mp4", getSharedPreferences(Constants.PREFERENCES_KEY, MODE_PRIVATE)));
-        System.out.println(PathFinder.findPath(this, "test.pdf", getSharedPreferences(Constants.PREFERENCES_KEY, MODE_PRIVATE)));
-        System.out.println(PathFinder.findPath(this, "test2.asdg", getSharedPreferences(Constants.PREFERENCES_KEY, MODE_PRIVATE)));
-        System.out.println(PathFinder.findPath(this, "test.mp3", getSharedPreferences(Constants.PREFERENCES_KEY, MODE_PRIVATE)));
-
-
     }
 
     private void startDiscovery(){

@@ -7,10 +7,11 @@ import com.example.wirelessfiletransfer.Constants;
 
 public class PathFinder {
 
-    public static String findPath(Context context, String filename, SharedPreferences prefs){
+    public static String findPath(Context context, String filename){
+        SharedPreferences prefs = context.getSharedPreferences(Constants.PREFERENCES_KEY, Context.MODE_PRIVATE);
         String extension = FileUtils.getMimeType(filename);
         String path = FileUtils.getStoragePath(context);
-        String folder = Constants.DEF_OTHER;
+        String folder = prefs.getString(Constants.KEY_OTHER, Constants.KEY_OTHER);
         if(extension != null) {
             if (extension.startsWith("image")) {
                 folder = prefs.getString(Constants.KEY_IMAGES, Constants.DEF_IMAGES);
@@ -22,8 +23,9 @@ public class PathFinder {
                 folder = prefs.getString(Constants.KEY_DOCUMENTS, Constants.DEF_DOCUMENTS);
             }
         }
-        path = path + "/" + folder;
+        path = path + "/" + folder + "/" + filename;
         return path;
     }
+
 
 }

@@ -10,7 +10,7 @@ public class Constants {
 
 
     // Shared Preferences Keys
-    public static final String DEF_IMAGES = "Images";
+    public static final String DEF_IMAGES = "Pictures";
     public static final String DEF_AUDIO = "Audio";
     public static final String DEF_VIDEOS = "Videos";
     public static final String DEF_DOCUMENTS = "Documents";

@@ -1,14 +1,17 @@
 package com.example.wirelessfiletransfer.Utils;
 
 import android.app.Activity;
-import android.content.ContentResolver;
+import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Environment;
+import android.provider.MediaStore;
 import android.provider.OpenableColumns;
 import android.webkit.MimeTypeMap;
+
+import java.io.File;
 
 public class FileUtils {
 
@@ -64,6 +67,15 @@ public class FileUtils {
         int in = filename.lastIndexOf(".");
         String extension = filename.substring(in + 1).toLowerCase();
         mimeType = MimeTypeMap.getSingleton().getMimeTypeFromExtension(extension);
+        System.out.println("MIME TYPE: " + mimeType + " - Filename: " + filename);
         return mimeType;
     }
+
+    public static void addToMediaStore(Context context, File file) {
+        ContentValues values = new ContentValues();
+        values.put(MediaStore.Images.Media.DATA, file.getAbsolutePath());
+        values.put(MediaStore.Images.Media.MIME_TYPE, getMimeType(file.getName()));
+        context.getContentResolver().insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, values);
+    }
+
 }
