@@ -37,6 +37,14 @@ public class DeviceDiscovery extends AppCompatActivity implements DiscoveryUtils
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_device_discovery);
+        Intent intent = getIntent();
+        String action = intent.getAction();
+        String type = intent.getType();
+
+        if (Intent.ACTION_SEND.equals(action) && type != null) {
+            //todo
+        }
+
         setUI();
         startDiscovery();
     }

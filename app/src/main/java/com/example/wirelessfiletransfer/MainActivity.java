@@ -8,7 +8,6 @@ import android.widget.EditText;
 
 import com.example.wirelessfiletransfer.Model.Device;
 
-import java.io.IOException;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
