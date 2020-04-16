@@ -8,7 +8,8 @@ public class Constants {
     public static final String DATA_SEPARATOR = ":";
 
 
-
+    // Network Broadcasts
+    public static final int BROADCAST_WAIT_TIME = 3000;
     // Shared Preferences Keys
     public static final String DEF_IMAGES = "Pictures";
     public static final String DEF_AUDIO = "Audio";

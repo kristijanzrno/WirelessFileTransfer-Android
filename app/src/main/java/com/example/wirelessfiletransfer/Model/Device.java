@@ -10,6 +10,7 @@ public class Device implements Serializable {
     private int port;
     private String available;
     private String info;
+    private int discovered = 0;
 
     public Device(){}
 
@@ -65,6 +66,13 @@ public class Device implements Serializable {
         return available.equals("Available");
     }
 
+    public int getDiscovered() {
+        return discovered;
+    }
+
+    public void setDiscovered(int discovered) {
+        this.discovered = discovered;
+    }
 
     @NonNull
     @Override

@@ -20,21 +20,22 @@ public class DiscoveryService {
     }
 
     public void start() throws Exception{
-        if(broadcaster == null)
-            broadcaster = new SignalBroadcaster(broadcastSocket, receiveSocket.getLocalPort());
-        if(receiver == null)
+        if(broadcaster == null && receiver == null) {
+            broadcaster = new SignalBroadcaster(broadcastSocket, receiveSocket.getLocalPort(), discoveryUtils);
             receiver = new SignalReceiver(discoveryUtils, receiveSocket);
-        broadcaster.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, null);
-        receiver.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, null);
+            broadcaster.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, null);
+            receiver.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, null);
+        }
     }
 
     public void stop(){
         if(!receiver.isCancelled())
             receiver.cancel(false);
-        if(!broadcaster.isCancelled()) {
+        if(!broadcaster.isCancelled())
             broadcaster.cancel(false);
-            System.out.println("cancelleeeeed");
-        }
+
+        broadcaster = null;
+        receiver = null;
     }
 
     //todo methods to stop/restart

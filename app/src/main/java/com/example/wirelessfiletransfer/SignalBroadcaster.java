@@ -11,13 +11,14 @@ import java.util.Enumeration;
 
 public class SignalBroadcaster extends AsyncTask<String, String, String> {
 
-    private static final int WAIT_TIME = 5000;
     private DatagramSocket socket;
+    private DiscoveryUtils discoveryUtils;
     private int localReceiverPort;
 
-    public SignalBroadcaster(DatagramSocket socket, int localReceiverPort) {
+    public SignalBroadcaster(DatagramSocket socket, int localReceiverPort, DiscoveryUtils discoveryUtils) {
         this.socket = socket;
         this.localReceiverPort = localReceiverPort;
+        this.discoveryUtils = discoveryUtils;
     }
 
     @Override
@@ -50,7 +51,8 @@ public class SignalBroadcaster extends AsyncTask<String, String, String> {
                         }
                     }
                 }
-                Thread.sleep(WAIT_TIME);
+                discoveryUtils.onNetworkScanned();
+                Thread.sleep(Constants.BROADCAST_WAIT_TIME);
             }
         }catch(Exception e){
             e.printStackTrace();

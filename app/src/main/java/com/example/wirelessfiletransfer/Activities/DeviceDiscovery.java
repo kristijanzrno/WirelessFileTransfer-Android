@@ -8,12 +8,10 @@ import android.content.Intent;
 import android.os.Bundle;
 
 import com.example.wirelessfiletransfer.Adapters.DeviceDiscoveryAdapter;
-import com.example.wirelessfiletransfer.Constants;
 import com.example.wirelessfiletransfer.DiscoveryService;
 import com.example.wirelessfiletransfer.DiscoveryUtils;
 import com.example.wirelessfiletransfer.Model.Device;
 import com.example.wirelessfiletransfer.R;
-import com.example.wirelessfiletransfer.Utils.PathFinder;
 
 import java.util.ArrayList;
 
@@ -56,11 +54,23 @@ public class DeviceDiscovery extends AppCompatActivity implements DiscoveryUtils
     }
     @Override
     public void onDeviceDiscovered(java.lang.String ip, int port, java.lang.String info) {
-        // Will have to change it to test ip, cause device might change port
-        // todo
         Device discoveredDevice = new Device("test", ip, port, "Available", "additionalInfo");
-        if(!(devices.stream().anyMatch(o -> o.getIp().equals(ip)))) {
+        Device existingDevice = devices.stream().filter(o -> o.getIp().equals(ip)).findFirst().orElse(null);
+        if(existingDevice == null){
             devices.add(discoveredDevice);
+        }else{
+            existingDevice.setDiscovered(0);
+        }
+        runOnUiThread(() -> adapter.notifyDataSetChanged());
+    }
+
+    @Override
+    public void onNetworkScanned() {
+        // Checking for disconnected devices
+        for(Device device : devices) {
+            device.setDiscovered(device.getDiscovered()+1);
+            if(device.getDiscovered() == 3)
+                devices.remove(device);
         }
         runOnUiThread(() -> adapter.notifyDataSetChanged());
     }
