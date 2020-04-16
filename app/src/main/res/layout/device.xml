@@ -1,13 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="70dp"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:padding="8dp"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <androidx.cardview.widget.CardView
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="80sp"
         app:cardCornerRadius="8dp"
+        app:cardElevation="8dp"
         android:layout_margin="8dp">
 
         <RelativeLayout
@@ -15,13 +17,27 @@
             android:layout_height="match_parent"
             android:padding="8dp">
 
+            <ImageView
+                android:id="@+id/device_icon"
+                android:layout_width="40sp"
+                android:layout_height="40sp"
+                android:layout_centerVertical="true"
+                android:layout_alignParentLeft="true"
+                android:src="@drawable/ic_monitor"
+                android:tint="@color/gBlue"
+                android:layout_marginLeft="10sp"
+                />
+
             <TextView
                 android:id="@+id/device_ip"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
                 android:textAppearance="@style/TextAppearance.AppCompat.Title"
-                android:textColor="@color/colorPrimary"/>
+                android:textColor="@color/gBlue"
+                android:layout_toRightOf="@id/device_icon"
+                android:layout_marginLeft="10sp"
+                />
         </RelativeLayout>
 
 

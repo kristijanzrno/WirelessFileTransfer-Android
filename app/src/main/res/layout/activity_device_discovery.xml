@@ -6,11 +6,71 @@
     android:layout_height="match_parent"
     tools:context=".Activities.DeviceDiscovery">
 
+        <androidx.cardview.widget.CardView
+            android:id="@+id/header"
+            android:layout_width="match_parent"
+            android:layout_height="120sp"
+            app:cardCornerRadius="5sp"
+            app:cardElevation="8sp"
+            android:paddingTop="20sp"
+            android:layout_alignParentTop="true">
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                >
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/discoveryRecyclerView"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
+                <ImageView
+                    android:layout_width="25sp"
+                    android:layout_height="25sp"
+                    android:src="@drawable/ic_settings"
+                    android:tint="@color/gBlue"
+                    android:layout_centerVertical="true"
+                    android:layout_toLeftOf="@id/headerTitle"
+                    android:layout_marginRight="30sp"
+                    android:layout_marginBottom="30sp"
+                    android:layout_alignParentBottom="true"/>
+
+                <TextView
+                    android:id="@+id/headerTitle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/gBlue"
+                    android:textStyle="bold"
+                    android:text="Scanning for devices..."
+                    android:textSize="20sp"
+                    android:layout_alignParentBottom="true"
+                    android:layout_centerHorizontal="true"
+                    android:layout_marginBottom="30sp"
+                    />
+                    <com.skyfishjy.library.RippleBackground
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:id="@+id/discovery_scan_icon"
+                        app:rb_color="@color/gBlue"
+                        app:rb_radius="12dp"
+                        app:rb_rippleAmount="4"
+                        app:rb_duration="6000"
+                        app:rb_scale="3"
+                        android:layout_toRightOf="@id/headerTitle"
+                        android:layout_marginTop="30sp">
+                <ImageView
+                    android:layout_width="18sp"
+                    android:layout_height="18sp"
+                    android:src="@drawable/ic_smartphone"
+                    android:tint="#FFF"
+                    android:layout_marginLeft="20sp"
+                    android:layout_centerVertical="true"
+                    android:layout_centerHorizontal="true"/>
+                    </com.skyfishjy.library.RippleBackground>
+
+        </RelativeLayout>
+        </androidx.cardview.widget.CardView>
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/discoveryRecyclerView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_below="@id/header">
 
     </androidx.recyclerview.widget.RecyclerView>
 

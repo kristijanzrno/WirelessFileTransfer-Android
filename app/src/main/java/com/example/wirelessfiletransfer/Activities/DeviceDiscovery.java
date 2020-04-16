@@ -6,12 +6,15 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.View;
+import android.widget.ImageView;
 
 import com.example.wirelessfiletransfer.Adapters.DeviceDiscoveryAdapter;
 import com.example.wirelessfiletransfer.DiscoveryService;
 import com.example.wirelessfiletransfer.DiscoveryUtils;
 import com.example.wirelessfiletransfer.Model.Device;
 import com.example.wirelessfiletransfer.R;
+import com.skyfishjy.library.RippleBackground;
 
 import java.util.ArrayList;
 
@@ -22,6 +25,8 @@ public class DeviceDiscovery extends AppCompatActivity implements DiscoveryUtils
 
     @BindView(R.id.discoveryRecyclerView)
     RecyclerView discoveryRecyclerView;
+    @BindView(R.id.discovery_scan_icon)
+    RippleBackground discoveryScanIcon;
 
     private ArrayList<Device> devices = new ArrayList<>();
     private DeviceDiscoveryAdapter adapter;
@@ -47,6 +52,9 @@ public class DeviceDiscovery extends AppCompatActivity implements DiscoveryUtils
     }
 
     private void setUI(){
+        getWindow().getDecorView().setSystemUiVisibility(
+                View.SYSTEM_UI_FLAG_LAYOUT_STABLE
+                        | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN);
         ButterKnife.bind(this);
         adapter = new DeviceDiscoveryAdapter(devices, this);
         discoveryRecyclerView.setLayoutManager(new LinearLayoutManager(this));
@@ -67,11 +75,12 @@ public class DeviceDiscovery extends AppCompatActivity implements DiscoveryUtils
     @Override
     public void onNetworkScanned() {
         // Checking for disconnected devices
-        for(Device device : devices) {
-            device.setDiscovered(device.getDiscovered()+1);
-            if(device.getDiscovered() == 3)
-                devices.remove(device);
+        for(int i = devices.size()-1; i>=0; i--){
+            devices.get(i).setDiscovered(devices.get(i).getDiscovered()+1);
+            if(devices.get(i).getDiscovered() == 3)
+                devices.remove(i);
         }
+
         runOnUiThread(() -> adapter.notifyDataSetChanged());
     }
 
@@ -88,6 +97,7 @@ public class DeviceDiscovery extends AppCompatActivity implements DiscoveryUtils
     protected void onResume() {
         super.onResume();
         startDiscovery();
+        discoveryScanIcon.startRippleAnimation();
     }
 
     @Override
@@ -96,5 +106,6 @@ public class DeviceDiscovery extends AppCompatActivity implements DiscoveryUtils
         System.out.println("pausing...");
         if(discoveryService != null)
             discoveryService.stop();
+        discoveryScanIcon.stopRippleAnimation();
     }
 }
