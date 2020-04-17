@@ -43,7 +43,7 @@ public class DeviceDiscoveryAdapter extends RecyclerView.Adapter<DeviceDiscovery
                 discoveryUtils.onDeviceSelected(devices.get(position));
             }
         });
-        holder.deviceIP.setText(devices.get(position).getIp());
+        holder.deviceIP.setText(devices.get(position).getName());
     }
 
     @Override

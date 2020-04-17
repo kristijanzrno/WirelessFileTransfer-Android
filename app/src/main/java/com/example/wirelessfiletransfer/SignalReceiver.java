@@ -2,6 +2,9 @@ package com.example.wirelessfiletransfer;
 
 import android.os.AsyncTask;
 
+import com.example.wirelessfiletransfer.Model.Device;
+
+import java.io.Serializable;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 
@@ -27,13 +30,13 @@ public class SignalReceiver extends AsyncTask<String, String, String> {
                 String message = new String(receivePacket.getData()).trim();
                 if (message.startsWith("disc_")) {
                     message = message.replace("disc_", "");
+                    String[] data = message.split("::");
                     String ip = receivePacket.getSocketAddress().toString().split(":")[0];
-                    String port = message.split("::")[1];
-                    System.out.println("IP: " + ip + "\n" + "Port: " + port);
+                    String port = data[1];
                     ip = ip.replaceAll("[^\\d.]", "");
                     port = port.replaceAll("[^\\d.]", "");
-
-                    discoveryUtils.onDeviceDiscovered(ip, Integer.parseInt(port), message);
+                    Device device = new Device(data[0], ip, Integer.parseInt(port), data[2], data[3]);
+                    discoveryUtils.onDeviceDiscovered(device);
                 }
             }
         }catch (Exception e){

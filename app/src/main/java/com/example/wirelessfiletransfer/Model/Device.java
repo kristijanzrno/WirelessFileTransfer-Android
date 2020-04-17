@@ -63,6 +63,7 @@ public class Device implements Serializable {
     }
 
     public boolean isAvailable(){
+        System.out.println("available:" + available);
         return available.equals("Available");
     }
 

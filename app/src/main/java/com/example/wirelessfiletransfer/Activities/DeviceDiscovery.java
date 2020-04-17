@@ -69,11 +69,10 @@ public class DeviceDiscovery extends AppCompatActivity implements DiscoveryUtils
         discoveryRecyclerView.setAdapter(adapter);
     }
     @Override
-    public void onDeviceDiscovered(java.lang.String ip, int port, java.lang.String info) {
-        Device discoveredDevice = new Device("test", ip, port, "Available", "additionalInfo");
-        Device existingDevice = devices.stream().filter(o -> o.getIp().equals(ip)).findFirst().orElse(null);
+    public void onDeviceDiscovered(Device device) {
+        Device existingDevice = devices.stream().filter(o -> o.getIp().equals(device.getIp())).findFirst().orElse(null);
         if(existingDevice == null){
-            devices.add(discoveredDevice);
+            devices.add(device);
         }else{
             existingDevice.setDiscovered(0);
         }
