@@ -10,13 +10,22 @@ import com.example.wirelessfiletransfer.Utils.FileHandler;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.Socket;
+import java.security.KeyStore;
+import java.security.SecureRandom;
 import java.util.LinkedList;
 import java.util.Queue;
 
+import javax.net.ssl.KeyManagerFactory;
+import javax.net.ssl.SSLContext;
+import javax.net.ssl.SSLSocket;
+import javax.net.ssl.SSLSocketFactory;
+import javax.net.ssl.TrustManagerFactory;
+
 public class ConnectionHandler extends AsyncTask<String, Void, Void> {
     private Activity activity;
-    private Socket socket;
+    private SSLSocket socket;
 
     private boolean isRunning = true;
     private SendToActivity sendToActivity;
@@ -38,12 +47,14 @@ public class ConnectionHandler extends AsyncTask<String, Void, Void> {
         DataInputStream input = null;
         DataOutputStream output = null;
         try {
-            socket = new Socket(ip, port);
+            SSLSocketFactory sslSocketFactory = importCertificate();
+            socket = (SSLSocket) sslSocketFactory.createSocket(ip, port);
+            socket.startHandshake();
             if(socket != null) {
                 input = new DataInputStream(socket.getInputStream());
                 output = new DataOutputStream(socket.getOutputStream());
             }
-        } catch (IOException e) {
+        } catch (Exception e) {
             e.printStackTrace();
             sendToActivity.sendMessage(e.getMessage());
             isRunning = false;
@@ -117,6 +128,24 @@ public class ConnectionHandler extends AsyncTask<String, Void, Void> {
 
     public void endConnection() throws IOException {
         socket.close();
+    }
+
+    private SSLSocketFactory importCertificate(){
+        try {
+            KeyStore keyStore = KeyStore.getInstance(KeyStore.getDefaultType());
+            InputStream key = activity.getResources().openRawResource(R.raw.client);
+            keyStore.load(key, "client".toCharArray());
+            KeyManagerFactory keyManagerFactory = KeyManagerFactory.getInstance("X509");
+            keyManagerFactory.init(keyStore, "client".toCharArray());
+            TrustManagerFactory trustManagerFactory = TrustManagerFactory.getInstance(KeyManagerFactory.getDefaultAlgorithm());
+            trustManagerFactory.init(keyStore);
+            SSLContext context = SSLContext.getInstance("TLS");
+            context.init(keyManagerFactory.getKeyManagers(), trustManagerFactory.getTrustManagers(), new SecureRandom());
+            return context.getSocketFactory();
+        }catch (Exception e){
+            e.printStackTrace();
+            return null;
+        }
     }
 
 }
