@@ -34,4 +34,8 @@ public class ConnectionUtils {
         }
     }
 
+    public void terminateConnection(){
+        connectionHandler.endConnection();
+    }
+
 }

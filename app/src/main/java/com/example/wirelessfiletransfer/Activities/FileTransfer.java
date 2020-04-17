@@ -90,4 +90,10 @@ public class FileTransfer extends AppCompatActivity implements SendToActivity {
             }
         }
     }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        connectionUtils.terminateConnection();
+    }
 }

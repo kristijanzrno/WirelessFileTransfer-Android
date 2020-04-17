@@ -11,7 +11,6 @@ import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.net.Socket;
 import java.security.KeyStore;
 import java.security.SecureRandom;
 import java.util.LinkedList;
@@ -94,6 +93,9 @@ public class ConnectionHandler extends AsyncTask<String, Void, Void> {
                     break;
                 case Constants.FILE_SEND_COMPLETE_MESSAGE:
                     break;
+                case Constants.CONNECTION_TERMINATOR:
+                    endConnection();
+                    break;
             }
 
         }
@@ -126,8 +128,14 @@ public class ConnectionHandler extends AsyncTask<String, Void, Void> {
         return "";
     }
 
-    public void endConnection() throws IOException {
-        socket.close();
+    public void endConnection() {
+        try {
+            sendMessage(Constants.CONNECTION_TERMINATOR);
+            isRunning = false;
+            socket.close();
+        }catch (Exception e){
+            e.printStackTrace();
+        }
     }
 
     private SSLSocketFactory importCertificate(){
