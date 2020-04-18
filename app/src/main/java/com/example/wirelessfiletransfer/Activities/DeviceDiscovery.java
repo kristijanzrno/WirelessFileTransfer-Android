@@ -20,6 +20,7 @@ import java.util.ArrayList;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 
 public class DeviceDiscovery extends AppCompatActivity implements DiscoveryUtils {
 
@@ -68,6 +69,13 @@ public class DeviceDiscovery extends AppCompatActivity implements DiscoveryUtils
         discoveryRecyclerView.setLayoutManager(new LinearLayoutManager(this));
         discoveryRecyclerView.setAdapter(adapter);
     }
+
+    @OnClick(R.id.settingsButton)
+    public void openSettings(View v){
+        Intent i = new Intent(this, Settings.class);
+        startActivity(i);
+    }
+
     @Override
     public void onDeviceDiscovered(Device device) {
         Device existingDevice = devices.stream().filter(o -> o.getIp().equals(device.getIp())).findFirst().orElse(null);
