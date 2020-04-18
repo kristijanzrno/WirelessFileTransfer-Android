@@ -7,6 +7,7 @@ import android.database.Cursor;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Environment;
+import android.provider.DocumentsContract;
 import android.provider.MediaStore;
 import android.provider.OpenableColumns;
 import android.webkit.MimeTypeMap;
@@ -62,6 +63,9 @@ public class FileUtils {
         return storagePath;
     }
 
+
+
+
     public static String getMimeType(String filename){
         String mimeType = "";
         int in = filename.lastIndexOf(".");
@@ -77,5 +81,39 @@ public class FileUtils {
         values.put(MediaStore.Images.Media.MIME_TYPE, getMimeType(file.getName()));
         context.getContentResolver().insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, values);
     }
+
+    // Using android:requestLegacyExternalStorage="true"
+    // The program will be able to write the external storage without
+    // going through DocumentProvider/SAF.
+
+    // Application only allows writing on internal storage at the moment (SD cards are not supported yet)
+    // Path to URI for SDK versions above 19
+    public static String getFolderPathFromUri(Context context, Uri uri){
+        if(isExternalStorageDocument(uri)) {
+            String uriSegment = uri.getLastPathSegment();
+            String storage = getStoragePath(context);
+            String[] splitURI = uriSegment.split(":");
+            String type = splitURI[0];
+            if("home".equalsIgnoreCase(type)){
+                //home: equals to the Documents folder
+                storage += "/Documents/";
+            } else if ("primary".equalsIgnoreCase(type)){
+                //other folders on internal storage
+                storage += "/";
+            }else{
+                return null;
+            }
+            if(splitURI.length > 1)
+                storage += splitURI[1];;
+            return storage;
+        }
+        return null;
+    }
+
+    // https://github.com/HBiSoft/PickiT/blob/master/pickit/src/main/java/com/hbisoft/pickit/Utils.java
+    private static boolean isExternalStorageDocument(Uri uri) {
+        return "com.android.externalstorage.documents".equals(uri.getAuthority());
+    }
+
 
 }

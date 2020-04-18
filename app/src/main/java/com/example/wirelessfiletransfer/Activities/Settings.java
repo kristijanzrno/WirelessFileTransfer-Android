@@ -7,12 +7,16 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
+import android.provider.DocumentsContract;
 import android.view.View;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.wirelessfiletransfer.Constants;
 import com.example.wirelessfiletransfer.R;
+import com.example.wirelessfiletransfer.Utils.FileUtils;
 
+import java.io.File;
 import java.util.List;
 
 import butterknife.BindViews;
@@ -27,13 +31,29 @@ public class Settings extends AppCompatActivity {
     private String toChange = "";
     private SharedPreferences prefs;
     private int position;
+    private String storage = "";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_settings);
-        ButterKnife.bind(this);
         prefs = getSharedPreferences(Constants.PREFERENCES_KEY, MODE_PRIVATE);
+        storage = FileUtils.getStoragePath(this);
+        setUI();
+    }
+
+    private void setUI(){
+        getWindow().getDecorView().setSystemUiVisibility(
+                View.SYSTEM_UI_FLAG_LAYOUT_STABLE
+                        | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN);
+        ButterKnife.bind(this);
+
+        pathTextViews.get(0).setText(prefs.getString(Constants.KEY_IMAGES, storage + "/" + Constants.DEF_IMAGES));
+        pathTextViews.get(1).setText(prefs.getString(Constants.KEY_AUDIO, storage + "/" + Constants.KEY_AUDIO));
+        pathTextViews.get(2).setText(prefs.getString(Constants.KEY_VIDEOS, storage + "/" + Constants.KEY_VIDEOS));
+        pathTextViews.get(3).setText(prefs.getString(Constants.KEY_DOCUMENTS, storage + "/" + Constants.KEY_DOCUMENTS));
+        pathTextViews.get(4).setText(prefs.getString(Constants.KEY_OTHER, storage + "/" + Constants.KEY_OTHER));
+
     }
 
     @OnClick(R.id.imagesCard)
@@ -65,19 +85,25 @@ public class Settings extends AppCompatActivity {
         toChange = mediaType;
         this.position = position;
         Intent filePicker = new Intent(Intent.ACTION_OPEN_DOCUMENT_TREE);
-        filePicker.addCategory(Intent.CATEGORY_OPENABLE);
         filePicker.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, false);
         filePicker.putExtra(Intent.EXTRA_LOCAL_ONLY, true);
+        filePicker.putExtra(DocumentsContract.EXTRA_INITIAL_URI, Uri.parse(storage));
+        filePicker.putExtra("android.content.extra.SHOW_ADVANCED", true);
         startActivityForResult(filePicker, Constants.FILE_PICKER_REQUEST);
     }
 
     private void changeMediaUri(Uri uri){
-        if(!toChange.isEmpty() && position != -1){
-            prefs.edit().putString(toChange, uri.toString()).apply();
-            pathTextViews.get(position).setText(uri.toString());
+        String path = FileUtils.getFolderPathFromUri(this, uri);
+        if(path != null) {
+            if (!toChange.isEmpty() && position != -1) {
+                prefs.edit().putString(toChange, path).apply();
+                pathTextViews.get(position).setText(path);
+            }
+            toChange = "";
+            position = -1;
+        }else{
+            Toast.makeText(this, "Could not select the chosen folder.", Toast.LENGTH_SHORT).show();
         }
-        toChange = "";
-        position = -1;
     }
 
     @Override
