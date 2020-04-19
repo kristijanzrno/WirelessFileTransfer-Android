@@ -7,6 +7,9 @@ public class Constants {
     public static final String FILE_NAME_MESSAGE = "_filename";
     public static final String DATA_SEPARATOR = ":";
     public static final String CONNECTION_TERMINATOR = "_terminate";
+    public static final String CONNECTION_REQUEST = "_connect";
+    public static final String CONNECTION_ACCEPTED = "_accepted";
+    public static final String CONNECTION_REFUSED = "_refused";
 
 
     // Network Broadcasts

@@ -5,6 +5,7 @@ import android.net.Uri;
 import android.os.AsyncTask;
 
 import com.example.wirelessfiletransfer.Model.Action;
+import com.example.wirelessfiletransfer.Model.Device;
 import com.example.wirelessfiletransfer.Utils.FileHandler;
 
 import java.io.DataInputStream;
@@ -23,19 +24,17 @@ import javax.net.ssl.SSLSocketFactory;
 import javax.net.ssl.TrustManagerFactory;
 
 public class ConnectionHandler extends AsyncTask<String, Void, Void> {
+
     private Activity activity;
     private SSLSocket socket;
-
     private boolean isRunning = true;
     private SendToActivity sendToActivity;
     private Queue<Action> actions;
 
-    private String ip;
-    private int port;
+    private Device device;
 
-    public ConnectionHandler(String ip, int port, Activity activity){
-        this.ip = ip;
-        this.port = port;
+    public ConnectionHandler(Device device, Activity activity){
+        this.device = device;
         this.activity = activity;
         this.actions = new LinkedList<>();
         sendToActivity = (SendToActivity) activity;
@@ -47,7 +46,7 @@ public class ConnectionHandler extends AsyncTask<String, Void, Void> {
         DataOutputStream output = null;
         try {
             SSLSocketFactory sslSocketFactory = importCertificate();
-            socket = (SSLSocket) sslSocketFactory.createSocket(ip, port);
+            socket = (SSLSocket) sslSocketFactory.createSocket(device.getIp(), device.getPort());
             socket.startHandshake();
             if(socket != null) {
                 input = new DataInputStream(socket.getInputStream());
@@ -96,6 +95,12 @@ public class ConnectionHandler extends AsyncTask<String, Void, Void> {
                 case Constants.CONNECTION_TERMINATOR:
                     endConnection();
                     break;
+                case Constants.CONNECTION_ACCEPTED:
+                    sendToActivity.onDeviceConnected();
+                    break;
+                case Constants.CONNECTION_REFUSED:
+                    sendToActivity.onConnectionRefused();
+                    break;
             }
 
         }
@@ -136,6 +141,10 @@ public class ConnectionHandler extends AsyncTask<String, Void, Void> {
         }catch (Exception e){
             e.printStackTrace();
         }
+    }
+
+    public void connect(Device device){
+        sendMessage(Constants.CONNECTION_REQUEST + Constants.DATA_SEPARATOR + device.getName());
     }
 
     private SSLSocketFactory importCertificate(){

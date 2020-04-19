@@ -4,7 +4,49 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:id="@+id/file_transfer_rootView"
     tools:context=".Activities.FileTransfer">
+
+    <RelativeLayout
+        android:id="@+id/file_transfer_connectingOverlay"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="#FFF">
+
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_above="@id/file_transfer_connectingSpinKit"
+            android:text="Connecting"
+            android:textStyle="bold"
+            android:layout_centerHorizontal="true"
+            android:layout_marginBottom="10dp"
+            android:textAppearance="@style/TextAppearance.AppCompat.Title"/>
+
+        <com.github.ybq.android.spinkit.SpinKitView
+            android:id="@+id/file_transfer_connectingSpinKit"
+            style="@style/SpinKitView.Large.DoubleBounce"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            app:SpinKit_Color="@color/gBlue"
+            android:layout_centerInParent="true"/>
+
+        <TextView
+            android:layout_width="300dp"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/file_transfer_connectingSpinKit"
+            android:text="Please accept the connection on the selected device."
+            android:textStyle="bold"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="10dp"
+            android:textAppearance="@style/TextAppearance.AppCompat.Widget.ActionBar.Subtitle"
+            android:gravity="center"
+            />
+
+
+    </RelativeLayout>
 
     <androidx.cardview.widget.CardView
         android:id="@+id/file_transfer_header"

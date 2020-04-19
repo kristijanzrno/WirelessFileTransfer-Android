@@ -5,22 +5,21 @@ import android.net.Uri;
 
 import com.example.wirelessfiletransfer.ConnectionHandler;
 import com.example.wirelessfiletransfer.Constants;
+import com.example.wirelessfiletransfer.Model.Device;
 
 import java.util.ArrayList;
 
 public class ConnectionUtils {
 
-    private String ip;
-    private int port;
     private Activity parent;
+    private Device device;
 
     private ConnectionHandler connectionHandler;
 
-    public ConnectionUtils(String ip, int port, Activity parent) {
-        this.ip = ip;
-        this.port = port;
+    public ConnectionUtils(Device device, Activity parent) {
+        this.device = device;
         this.parent = parent;
-        connectionHandler = new ConnectionHandler(ip, port, parent);
+        connectionHandler = new ConnectionHandler(device, parent);
         connectionHandler.execute();
     }
 
@@ -32,6 +31,10 @@ public class ConnectionUtils {
             long fileSize = FileUtils.getFileSize(uri, parent);
             connectionHandler.sendFile(Constants.FILE_NAME_MESSAGE + Constants.DATA_SEPARATOR + filename + Constants.DATA_SEPARATOR + fileSize, uri);
         }
+    }
+
+    public void connect(){
+        connectionHandler.connect(device);
     }
 
     public void terminateConnection(){
