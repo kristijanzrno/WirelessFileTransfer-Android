@@ -36,12 +36,23 @@ public class FileTransfer extends AppCompatActivity implements SendToActivity {
     @BindView(R.id.file_transfer_rootView)
     RelativeLayout rootView;
 
+    @BindView(R.id.file_transfer_emptyState)
+    RelativeLayout emptyStateView;
+
+    @BindView(R.id.file_transfer_statusView)
+    RelativeLayout statusView;
+
     @BindView(R.id.file_transfer_connectingSpinKit)
     SpinKitView connectingSpinKit;
+
+    @BindView(R.id.file_transfer_statusText)
+    TextView statusTextView;
 
     private Device device;
     private ConnectionUtils connectionUtils;
 
+    private int noOfFiles = 0;
+    private int finished = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -76,9 +87,35 @@ public class FileTransfer extends AppCompatActivity implements SendToActivity {
 
     }
 
-    @Override
-    public void sendMessage(String message) {
+    private void switchView(boolean working){
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                if(working){
+                    updateStatus();
+                    statusView.setVisibility(View.VISIBLE);
+                    emptyStateView.setVisibility(View.INVISIBLE);
+                }else{
+                    statusView.setVisibility(View.INVISIBLE);
+                    emptyStateView.setVisibility(View.VISIBLE);
+                }
+            }
+        });
+    }
 
+    private void updateStatus(){
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                statusTextView.setText(finished + "/" + noOfFiles + " Files Transferred...");
+                if(noOfFiles == finished){
+                    Toast.makeText(FileTransfer.this, "Successfully transferred " + noOfFiles + " files!", Toast.LENGTH_SHORT).show();
+                    noOfFiles = 0;
+                    finished = 0;
+                    switchView(false);
+                }
+            }
+        });
     }
 
     @Override
@@ -109,18 +146,33 @@ public class FileTransfer extends AppCompatActivity implements SendToActivity {
     }
 
     @Override
-    public void onReceivingFiles(int noOfFiles) {
-
+    public void onFileTransferStarted(int noOfFiles) {
+        this.noOfFiles = noOfFiles;
+        switchView(true);
     }
 
     @Override
-    public void onFileReceived(String file) {
+    public void onFileTransferred() {
+        finished++;
+        updateStatus();
+    }
 
+    @Override
+    public void onReceivingFiles(int noOfFiles) {
+        this.noOfFiles = noOfFiles;
+        switchView(true);
+    }
+
+    @Override
+    public void onFileReceived() {
+        finished++;
+        updateStatus();
     }
 
     private void transferFiles(ArrayList<Uri> uris){
         assert uris != null : "Invalid files";
         System.out.println("Transferring " + uris.size() + " items");
+        onFileTransferStarted(uris.size());
         connectionUtils.transferFiles(uris);
     }
 

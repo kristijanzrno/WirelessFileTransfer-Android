@@ -48,6 +48,8 @@
 
     </RelativeLayout>
 
+
+
     <androidx.cardview.widget.CardView
         android:id="@+id/file_transfer_header"
         android:layout_width="match_parent"
@@ -75,10 +77,53 @@
     </androidx.cardview.widget.CardView>
 
     <RelativeLayout
+        android:id="@+id/file_transfer_statusView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@id/file_transfer_header"
-        />
+        android:visibility="invisible"
+        >
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Transferring Files..."
+            android:layout_above="@id/file_transfer_statusSpinner"
+            android:textStyle="bold"
+            android:layout_centerHorizontal="true"
+            android:textAppearance="@style/TextAppearance.AppCompat.Title"
+            android:layout_marginBottom="10dp"
+            />
+
+        <com.github.ybq.android.spinkit.SpinKitView
+            android:id="@+id/file_transfer_statusSpinner"
+            style="@style/SpinKitView.Large.CubeGrid"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            app:SpinKit_Color="@color/gBlue"
+            android:layout_centerInParent="true" />
+
+        <TextView
+            android:id="@+id/file_transfer_statusText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="10/10 Files transferred..."
+            android:layout_below="@id/file_transfer_statusSpinner"
+            android:textStyle="bold"
+            android:layout_centerHorizontal="true"
+            android:textAppearance="@style/TextAppearance.AppCompat.Title"
+            android:layout_marginTop="10dp"
+            />
+
+
+
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/file_transfer_emptyState"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        >
 
     <TextView
         android:layout_width="wrap_content"
@@ -108,7 +153,7 @@
         android:layout_centerHorizontal="true"
         android:layout_marginTop="10dp"
         android:gravity="center"/>
-
+    </RelativeLayout>
     <View
         android:layout_width="match_parent"
         android:layout_height="8dp"

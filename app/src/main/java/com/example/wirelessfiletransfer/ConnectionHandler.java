@@ -54,7 +54,6 @@ public class ConnectionHandler extends AsyncTask<String, Void, Void> {
             }
         } catch (Exception e) {
             e.printStackTrace();
-            sendToActivity.sendMessage(e.getMessage());
             isRunning = false;
         }
         System.out.println("Connected...");
@@ -75,7 +74,6 @@ public class ConnectionHandler extends AsyncTask<String, Void, Void> {
                 }
             } catch (IOException e) {
                 e.printStackTrace();
-                sendToActivity.sendMessage(e.getMessage());
             }
             // RECEIVING
             String receivedMessage = receiveMessage(input);
@@ -83,14 +81,16 @@ public class ConnectionHandler extends AsyncTask<String, Void, Void> {
             switch (message[0]) {
                 case Constants.FILE_SEND_MESSAGE:
                     System.out.println("Preparing to receive data. Receiving " + message[1] + " items.");
+                    sendToActivity.onReceivingFiles(Integer.parseInt(message[1]));
                     break;
                 case Constants.FILE_NAME_MESSAGE:
                     String filename = message[1];
                     long fileSize = Long.parseLong(message[2]);
-                    System.out.println("Receiving " + filename + "...");
-                    FileHandler.writeFile(activity, filename, fileSize, input);
+                    if(FileHandler.writeFile(activity, filename, fileSize, input))
+                        sendToActivity.onFileReceived();
                     break;
-                case Constants.FILE_SEND_COMPLETE_MESSAGE:
+                case Constants.FILE_RECEIVED:
+                    sendToActivity.onFileTransferred();
                     break;
                 case Constants.CONNECTION_TERMINATOR:
                     endConnection();

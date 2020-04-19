@@ -6,6 +6,7 @@ import android.net.Uri;
 import com.example.wirelessfiletransfer.ConnectionHandler;
 import com.example.wirelessfiletransfer.Constants;
 import com.example.wirelessfiletransfer.Model.Device;
+import com.example.wirelessfiletransfer.SendToActivity;
 
 import java.util.ArrayList;
 

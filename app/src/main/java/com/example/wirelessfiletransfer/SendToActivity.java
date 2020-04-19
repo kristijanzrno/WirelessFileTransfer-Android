@@ -1,10 +1,11 @@
 package com.example.wirelessfiletransfer;
 
 public interface SendToActivity {
-    void sendMessage(String message);
     void onDeviceConnected();
     void onConnectionRefused();
     void onConnectionTerminated();
+    void onFileTransferStarted(int noOfFiles);
+    void onFileTransferred();
     void onReceivingFiles(int noOfFiles);
-    void onFileReceived(String file);
+    void onFileReceived();
 }
