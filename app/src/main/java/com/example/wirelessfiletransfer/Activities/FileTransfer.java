@@ -7,6 +7,7 @@ import android.content.ClipData;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.view.View;
 import android.widget.TextView;
 
 import com.example.wirelessfiletransfer.Constants;
@@ -33,12 +34,10 @@ public class FileTransfer extends AppCompatActivity implements SendToActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_file_transfer);
-        ButterKnife.bind(this);
-
         device = (Device) getIntent().getSerializableExtra("device");
-
-        // Establish connection
         assert device != null : "Invalid Device";
+        setUI();
+        // Establish connection
         connectionUtils = new ConnectionUtils(device.getIp(), device.getPort(), this);
     }
 
@@ -51,6 +50,14 @@ public class FileTransfer extends AppCompatActivity implements SendToActivity {
         filePicker.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true);
         filePicker.putExtra(Intent.EXTRA_LOCAL_ONLY, true);
         startActivityForResult(filePicker, Constants.FILE_PICKER_REQUEST);
+    }
+
+    private void setUI(){
+        getWindow().getDecorView().setSystemUiVisibility(
+                View.SYSTEM_UI_FLAG_LAYOUT_STABLE
+                        | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN);
+        ButterKnife.bind(this);
+        deviceName.setText(device.getName());
     }
 
     @Override

@@ -6,21 +6,99 @@
     android:layout_height="match_parent"
     tools:context=".Activities.FileTransfer">
 
+    <androidx.cardview.widget.CardView
+        android:id="@+id/file_transfer_header"
+        android:layout_width="match_parent"
+        android:layout_height="120sp"
+        app:cardCornerRadius="5sp"
+        app:cardElevation="8sp"
+        android:paddingTop="20sp"
+        android:layout_alignParentTop="true">
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+            <TextView
+                android:id="@+id/file_transfer_device"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/gBlue"
+                android:textStyle="bold"
+                android:text="Device"
+                android:textSize="20sp"
+                android:layout_alignParentBottom="true"
+                android:layout_centerHorizontal="true"
+                android:layout_marginBottom="30sp"
+                />
+        </RelativeLayout>
+    </androidx.cardview.widget.CardView>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@id/file_transfer_header"
+        />
+
     <TextView
-        android:id="@+id/file_transfer_device"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:text="Waiting for files..."
+        android:layout_above="@id/file_transfer_folderImageView"
         android:textAppearance="@style/TextAppearance.AppCompat.Title"
-        android:textColor="@color/colorPrimary"/>
+        android:textStyle="bold"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="10dp"/>
 
-    <Button
-        android:id="@+id/file_transfer_select"
+
+    <ImageView
+        android:id="@+id/file_transfer_folderImageView"
+        android:layout_width="200dp"
+        android:layout_height="200dp"
+        android:src="@drawable/folder"
+        android:layout_centerInParent="true"/>
+
+    <TextView
+        android:layout_width="300dp"
+        android:layout_height="wrap_content"
+        android:text="Select the files you want to transfer to your phone or pc!"
+        android:layout_below="@id/file_transfer_folderImageView"
+        android:textAppearance="@style/TextAppearance.AppCompat.Widget.ActionBar.Subtitle"
+        android:textStyle="bold"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="10dp"
+        android:gravity="center"/>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="8dp"
+        android:background="@drawable/reverse_shadow"
+        android:layout_above="@id/file_transfer_footer"/>
+
+    <RelativeLayout
+        android:id="@+id/file_transfer_footer"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true">
+
+        <androidx.cardview.widget.CardView
+            android:id="@+id/file_transfer_select"
+            android:layout_width="match_parent"
+            android:layout_height="60dp"
+            app:cardCornerRadius="8dp"
+            android:clickable="true">
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+    <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Select Files"
-        android:layout_centerVertical="true"
-        android:layout_centerHorizontal="true"
-        />
+        android:layout_centerInParent="true"
+        android:textColor="@color/gBlue"
+        android:textAppearance="@style/TextAppearance.AppCompat.Title"
+        android:textStyle="bold"/>
+            </RelativeLayout>
+        </androidx.cardview.widget.CardView>
+</RelativeLayout>
 
 
 </RelativeLayout>
