@@ -3,6 +3,7 @@ package com.example.wirelessfiletransfer.Activities;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.app.Activity;
 import android.content.ClipData;
 import android.content.Intent;
 import android.net.Uri;
@@ -88,32 +89,26 @@ public class FileTransfer extends AppCompatActivity implements SendToActivity {
     }
 
     private void switchView(boolean working){
-        runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                if(working){
-                    updateStatus();
-                    statusView.setVisibility(View.VISIBLE);
-                    emptyStateView.setVisibility(View.INVISIBLE);
-                }else{
-                    statusView.setVisibility(View.INVISIBLE);
-                    emptyStateView.setVisibility(View.VISIBLE);
-                }
+        runOnUiThread(() -> {
+            if(working){
+                updateStatus();
+                statusView.setVisibility(View.VISIBLE);
+                emptyStateView.setVisibility(View.INVISIBLE);
+            }else{
+                statusView.setVisibility(View.INVISIBLE);
+                emptyStateView.setVisibility(View.VISIBLE);
             }
         });
     }
 
     private void updateStatus(){
-        runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                statusTextView.setText(finished + "/" + noOfFiles + " Files Transferred...");
-                if(noOfFiles == finished){
-                    Toast.makeText(FileTransfer.this, "Successfully transferred " + noOfFiles + " files!", Toast.LENGTH_SHORT).show();
-                    noOfFiles = 0;
-                    finished = 0;
-                    switchView(false);
-                }
+        runOnUiThread(() -> {
+            statusTextView.setText(finished + "/" + noOfFiles + " Files Transferred...");
+            if(noOfFiles == finished){
+                Toast.makeText(FileTransfer.this, "Successfully transferred " + noOfFiles + " files!", Toast.LENGTH_SHORT).show();
+                noOfFiles = 0;
+                finished = 0;
+                switchView(false);
             }
         });
     }
@@ -131,18 +126,13 @@ public class FileTransfer extends AppCompatActivity implements SendToActivity {
 
     @Override
     public void onConnectionRefused() {
-        runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                Toast.makeText(FileTransfer.this, "Connection Refused!", Toast.LENGTH_SHORT).show();
-            }
-        });
-        finish();
+        runOnUiThread(() -> Toast.makeText(FileTransfer.this, "Connection Refused!", Toast.LENGTH_SHORT).show());
+        interruptedConnection(Activity.RESULT_CANCELED);
     }
 
     @Override
     public void onConnectionTerminated() {
-
+        interruptedConnection(Activity.RESULT_CANCELED);
     }
 
     @Override
@@ -201,6 +191,18 @@ public class FileTransfer extends AppCompatActivity implements SendToActivity {
                     break;
             }
         }
+    }
+
+    private void interruptedConnection(int resultCode){
+        Intent i = new Intent();
+        setResult(resultCode, i);
+        finish();
+    }
+
+    @Override
+    public void onBackPressed() {
+        connectionUtils.terminateConnection();
+        interruptedConnection(Activity.RESULT_OK);
     }
 
     @Override

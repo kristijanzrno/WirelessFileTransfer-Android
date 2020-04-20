@@ -27,7 +27,7 @@ public class ConnectionHandler extends AsyncTask<String, Void, Void> {
 
     private Activity activity;
     private SSLSocket socket;
-    private boolean isRunning = true;
+    private boolean isRunning = false;
     private SendToActivity sendToActivity;
     private Queue<Action> actions;
 
@@ -51,15 +51,17 @@ public class ConnectionHandler extends AsyncTask<String, Void, Void> {
             if(socket != null) {
                 input = new DataInputStream(socket.getInputStream());
                 output = new DataOutputStream(socket.getOutputStream());
+                isRunning = true;
             }
         } catch (Exception e) {
             e.printStackTrace();
-            isRunning = false;
         }
         System.out.println("Connected...");
+
         while(isRunning) {
+            Action action = actions.poll();
+
             try {
-                Action action = actions.poll();
                 if(action != null) {
                     writeMessage(action.getMessage(), output);
                     switch (action.getAction()) {
@@ -74,9 +76,18 @@ public class ConnectionHandler extends AsyncTask<String, Void, Void> {
                 }
             } catch (IOException e) {
                 e.printStackTrace();
+                break;
             }
             // RECEIVING
-            String receivedMessage = receiveMessage(input);
+            String receivedMessage = "";
+
+            try {
+                receivedMessage = receiveMessage(input);
+            }catch (Exception e){
+                e.printStackTrace();
+                break;
+            }
+
             String[] message = receivedMessage.split(Constants.DATA_SEPARATOR);
             switch (message[0]) {
                 case Constants.FILE_SEND_MESSAGE:
@@ -93,7 +104,7 @@ public class ConnectionHandler extends AsyncTask<String, Void, Void> {
                     sendToActivity.onFileTransferred();
                     break;
                 case Constants.CONNECTION_TERMINATOR:
-                    endConnection();
+                    isRunning = false;
                     break;
                 case Constants.CONNECTION_ACCEPTED:
                     sendToActivity.onDeviceConnected();
@@ -104,6 +115,7 @@ public class ConnectionHandler extends AsyncTask<String, Void, Void> {
             }
 
         }
+        terminateConnection(isRunning);
         return null;
     }
 
@@ -121,26 +133,27 @@ public class ConnectionHandler extends AsyncTask<String, Void, Void> {
         output.writeUTF(message);
     }
 
-    private String receiveMessage(DataInputStream input) {
+    private String receiveMessage(DataInputStream input) throws IOException {
         if (input != null) {
-            try {
                 return input.readUTF();
-            } catch (IOException e) {
-                e.printStackTrace();
-                return "Could not read data";
-            }
         }
         return "";
     }
 
-    public void endConnection() {
+    private void terminateConnection(boolean wasRunning){
         try {
-            sendMessage(Constants.CONNECTION_TERMINATOR);
-            isRunning = false;
-            socket.close();
+            if (socket != null && !socket.isClosed())
+                socket.close();
+            if(wasRunning)
+                sendToActivity.onConnectionTerminated();
         }catch (Exception e){
             e.printStackTrace();
         }
+    }
+
+    public void endConnection() {
+        isRunning = false;
+        sendMessage(Constants.CONNECTION_TERMINATOR);
     }
 
     public void connect(Device device){

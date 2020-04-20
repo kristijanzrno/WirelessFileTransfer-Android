@@ -1,5 +1,6 @@
 package com.example.wirelessfiletransfer.Activities;
 
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -9,6 +10,8 @@ import android.os.Bundle;
 import android.view.View;
 
 import com.example.wirelessfiletransfer.Adapters.DeviceDiscoveryAdapter;
+import com.example.wirelessfiletransfer.Constants;
+import com.example.wirelessfiletransfer.CustomViews.CardDialog;
 import com.example.wirelessfiletransfer.DiscoveryService;
 import com.example.wirelessfiletransfer.DiscoveryUtils;
 import com.example.wirelessfiletransfer.Model.Device;
@@ -103,7 +106,16 @@ public class DeviceDiscovery extends AppCompatActivity implements DiscoveryUtils
         if(device.isAvailable()) {
             Intent i = new Intent(DeviceDiscovery.this, FileTransfer.class);
             i.putExtra("device", device);
-            startActivity(i);
+            startActivityForResult(i, Constants.FILE_TRANSFER_ACTIVITY_REQUEST);
+        }
+    }
+
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if(requestCode == Constants.FILE_TRANSFER_ACTIVITY_REQUEST && resultCode == RESULT_CANCELED) {
+            CardDialog.showAlertDialog(DeviceDiscovery.this, "Lost Connection", "The connection between devices has been interrupted.");
         }
     }
 
