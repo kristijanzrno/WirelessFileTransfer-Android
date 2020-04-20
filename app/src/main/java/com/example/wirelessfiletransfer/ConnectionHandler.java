@@ -69,7 +69,8 @@ public class ConnectionHandler extends AsyncTask<String, Void, Void> {
                         case "send_message":
                             break;
                         case "send_file":
-                            FileHandler.readFile(activity, action.getUri(), output);
+                            if(!FileHandler.readFile(activity, action.getUri(), output))
+                                sendMessage(Constants.FILE_TRANSFER_ERROR);
                             break;
                     }
                 }else{
@@ -98,6 +99,10 @@ public class ConnectionHandler extends AsyncTask<String, Void, Void> {
                         long fileSize = Long.parseLong(receivedMessage.paramAt(1));
                         if (FileHandler.writeFile(activity, filename, fileSize, input))
                             sendToActivity.onFileReceived();
+                        else{
+                            sendMessage(new Message.Builder().add(Constants.FILE_TRANSFER_ERROR).add(filename).build());
+                            sendToActivity.onFileTransferFailed(filename);
+                        }
                         break;
                     case Constants.FILE_RECEIVED:
                         sendToActivity.onFileTransferred();
