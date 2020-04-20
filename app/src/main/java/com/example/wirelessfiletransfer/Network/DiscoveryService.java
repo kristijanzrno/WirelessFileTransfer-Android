@@ -1,10 +1,11 @@
-package com.example.wirelessfiletransfer;
+package com.example.wirelessfiletransfer.Network;
 
 
 import android.os.AsyncTask;
 
+import com.example.wirelessfiletransfer.DiscoveryUtils;
+
 import java.net.DatagramSocket;
-import java.net.Socket;
 
 public class DiscoveryService {
 

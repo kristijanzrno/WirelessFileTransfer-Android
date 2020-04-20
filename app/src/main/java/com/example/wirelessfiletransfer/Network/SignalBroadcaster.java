@@ -1,6 +1,9 @@
-package com.example.wirelessfiletransfer;
+package com.example.wirelessfiletransfer.Network;
 
 import android.os.AsyncTask;
+
+import com.example.wirelessfiletransfer.Constants;
+import com.example.wirelessfiletransfer.DiscoveryUtils;
 
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;

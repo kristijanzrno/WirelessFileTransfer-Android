@@ -1,13 +1,17 @@
-package com.example.wirelessfiletransfer;
+package com.example.wirelessfiletransfer.Network;
 
 import android.app.Activity;
 import android.net.Uri;
 import android.os.AsyncTask;
 
+import com.example.wirelessfiletransfer.Constants;
 import com.example.wirelessfiletransfer.Model.Action;
 import com.example.wirelessfiletransfer.Model.Device;
 import com.example.wirelessfiletransfer.Model.Message;
+import com.example.wirelessfiletransfer.R;
+import com.example.wirelessfiletransfer.SendToActivity;
 import com.example.wirelessfiletransfer.Utils.FileHandler;
+import com.example.wirelessfiletransfer.Utils.FileUtils;
 
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
@@ -69,8 +73,10 @@ public class ConnectionHandler extends AsyncTask<String, Void, Void> {
                         case "send_message":
                             break;
                         case "send_file":
-                            if(!FileHandler.readFile(activity, action.getUri(), output))
+                            if(!FileHandler.readFile(activity, action.getUri(), output)) {
                                 sendMessage(Constants.FILE_TRANSFER_ERROR);
+                                sendToActivity.onFileTransferFailed(FileUtils.getFileName(action.getUri(), activity));
+                            }
                             break;
                     }
                 }else{

@@ -3,7 +3,7 @@ package com.example.wirelessfiletransfer.Utils;
 import android.app.Activity;
 import android.net.Uri;
 
-import com.example.wirelessfiletransfer.ConnectionHandler;
+import com.example.wirelessfiletransfer.Network.ConnectionHandler;
 import com.example.wirelessfiletransfer.Constants;
 import com.example.wirelessfiletransfer.Model.Device;
 import com.example.wirelessfiletransfer.Model.Message;

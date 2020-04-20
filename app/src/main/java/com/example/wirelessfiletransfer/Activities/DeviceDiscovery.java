@@ -12,7 +12,7 @@ import android.view.View;
 import com.example.wirelessfiletransfer.Adapters.DeviceDiscoveryAdapter;
 import com.example.wirelessfiletransfer.Constants;
 import com.example.wirelessfiletransfer.CustomViews.CardDialog;
-import com.example.wirelessfiletransfer.DiscoveryService;
+import com.example.wirelessfiletransfer.Network.DiscoveryService;
 import com.example.wirelessfiletransfer.DiscoveryUtils;
 import com.example.wirelessfiletransfer.Model.Device;
 import com.example.wirelessfiletransfer.R;
