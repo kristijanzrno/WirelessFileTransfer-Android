@@ -6,6 +6,7 @@ import android.os.AsyncTask;
 
 import com.example.wirelessfiletransfer.Model.Action;
 import com.example.wirelessfiletransfer.Model.Device;
+import com.example.wirelessfiletransfer.Model.Message;
 import com.example.wirelessfiletransfer.Utils.FileHandler;
 
 import java.io.DataInputStream;
@@ -79,39 +80,38 @@ public class ConnectionHandler extends AsyncTask<String, Void, Void> {
                 break;
             }
             // RECEIVING
-            String receivedMessage = "";
-
+            Message receivedMessage;
             try {
                 receivedMessage = receiveMessage(input);
             }catch (Exception e){
                 e.printStackTrace();
                 break;
             }
-
-            String[] message = receivedMessage.split(Constants.DATA_SEPARATOR);
-            switch (message[0]) {
-                case Constants.FILE_SEND_MESSAGE:
-                    System.out.println("Preparing to receive data. Receiving " + message[1] + " items.");
-                    sendToActivity.onReceivingFiles(Integer.parseInt(message[1]));
-                    break;
-                case Constants.FILE_NAME_MESSAGE:
-                    String filename = message[1];
-                    long fileSize = Long.parseLong(message[2]);
-                    if(FileHandler.writeFile(activity, filename, fileSize, input))
-                        sendToActivity.onFileReceived();
-                    break;
-                case Constants.FILE_RECEIVED:
-                    sendToActivity.onFileTransferred();
-                    break;
-                case Constants.CONNECTION_TERMINATOR:
-                    isRunning = false;
-                    break;
-                case Constants.CONNECTION_ACCEPTED:
-                    sendToActivity.onDeviceConnected();
-                    break;
-                case Constants.CONNECTION_REFUSED:
-                    sendToActivity.onConnectionRefused();
-                    break;
+            if(receivedMessage != null) {
+                switch (receivedMessage.getAction()) {
+                    case Constants.FILE_SEND_MESSAGE:
+                        System.out.println("Preparing to receive data. Receiving " + receivedMessage.paramAt(0) + " items.");
+                        sendToActivity.onReceivingFiles(Integer.parseInt(receivedMessage.paramAt(0)));
+                        break;
+                    case Constants.FILE_NAME_MESSAGE:
+                        String filename = receivedMessage.paramAt(0);
+                        long fileSize = Long.parseLong(receivedMessage.paramAt(1));
+                        if (FileHandler.writeFile(activity, filename, fileSize, input))
+                            sendToActivity.onFileReceived();
+                        break;
+                    case Constants.FILE_RECEIVED:
+                        sendToActivity.onFileTransferred();
+                        break;
+                    case Constants.CONNECTION_TERMINATOR:
+                        isRunning = false;
+                        break;
+                    case Constants.CONNECTION_ACCEPTED:
+                        sendToActivity.onDeviceConnected();
+                        break;
+                    case Constants.CONNECTION_REFUSED:
+                        sendToActivity.onConnectionRefused();
+                        break;
+                }
             }
 
         }
@@ -133,11 +133,11 @@ public class ConnectionHandler extends AsyncTask<String, Void, Void> {
         output.writeUTF(message);
     }
 
-    private String receiveMessage(DataInputStream input) throws IOException {
+    private Message receiveMessage(DataInputStream input) throws IOException {
         if (input != null) {
-                return input.readUTF();
+                return new Message(input.readUTF());
         }
-        return "";
+        return null;
     }
 
     private void terminateConnection(boolean wasRunning){
@@ -157,7 +157,7 @@ public class ConnectionHandler extends AsyncTask<String, Void, Void> {
     }
 
     public void connect(Device device){
-        sendMessage(Constants.CONNECTION_REQUEST + Constants.DATA_SEPARATOR + device.getName());
+        sendMessage(new Message.Builder().add(Constants.CONNECTION_REQUEST).add(device.getName()).build());
     }
 
     private SSLSocketFactory importCertificate(){

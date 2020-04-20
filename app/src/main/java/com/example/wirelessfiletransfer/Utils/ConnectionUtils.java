@@ -6,7 +6,7 @@ import android.net.Uri;
 import com.example.wirelessfiletransfer.ConnectionHandler;
 import com.example.wirelessfiletransfer.Constants;
 import com.example.wirelessfiletransfer.Model.Device;
-import com.example.wirelessfiletransfer.SendToActivity;
+import com.example.wirelessfiletransfer.Model.Message;
 
 import java.util.ArrayList;
 
@@ -26,7 +26,9 @@ public class ConnectionUtils {
 
     public void transferFiles(ArrayList<Uri> uris){
         // Preparing the server to receive n files
-        connectionHandler.sendMessage(Constants.FILE_SEND_MESSAGE + Constants.DATA_SEPARATOR + uris.size());
+        //connectionHandler.sendMessage(Constants.FILE_SEND_MESSAGE + Constants.DATA_SEPARATOR + uris.size());
+        String[] message = {Constants.FILE_SEND_MESSAGE, uris.size() + ""};
+        connectionHandler.sendMessage(new Message.Builder().add(Constants.FILE_SEND_MESSAGE).add(uris.size()+"").build());
         for(Uri uri : uris){
             String filename = FileUtils.getFileName(uri, parent);
             long fileSize = FileUtils.getFileSize(uri, parent);

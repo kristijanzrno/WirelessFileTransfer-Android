@@ -3,6 +3,7 @@ package com.example.wirelessfiletransfer;
 import android.os.AsyncTask;
 
 import com.example.wirelessfiletransfer.Model.Device;
+import com.example.wirelessfiletransfer.Model.Message;
 
 import java.io.Serializable;
 import java.net.DatagramPacket;
@@ -27,15 +28,16 @@ public class SignalReceiver extends AsyncTask<String, String, String> {
                 byte[] receiveBuffer = new byte[30000];
                 DatagramPacket receivePacket = new DatagramPacket(receiveBuffer, receiveBuffer.length);
                 socket.receive(receivePacket);
-                String message = new String(receivePacket.getData()).trim();
-                if (message.startsWith("disc_")) {
-                    message = message.replace("disc_", "");
-                    String[] data = message.split("::");
+                String data = new String(receivePacket.getData()).trim();
+                Message message = new Message(data);
+                if(message.getAction().equals(Constants.DEVICE_DISCOVERED)){
+                    //message = message.replace("disc_", "");
+                    //String[] data = message.split("::");
                     String ip = receivePacket.getSocketAddress().toString().split(":")[0];
-                    String port = data[1];
+                    String port = message.paramAt(1);
                     ip = ip.replaceAll("[^\\d.]", "");
                     port = port.replaceAll("[^\\d.]", "");
-                    Device device = new Device(data[0], ip, Integer.parseInt(port), data[2], data[3]);
+                    Device device = new Device(message.paramAt(0), ip, Integer.parseInt(port), message.paramAt(2), message.paramAt(3));
                     discoveryUtils.onDeviceDiscovered(device);
                 }
             }
