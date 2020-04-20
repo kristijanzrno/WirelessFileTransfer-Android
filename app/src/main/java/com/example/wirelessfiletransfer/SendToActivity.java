@@ -6,6 +6,7 @@ public interface SendToActivity {
     void onConnectionTerminated();
     void onFileTransferStarted(int noOfFiles);
     void onFileTransferred();
+    void onFileTransferFailed(String filename);
     void onReceivingFiles(int noOfFiles);
     void onFileReceived();
 }

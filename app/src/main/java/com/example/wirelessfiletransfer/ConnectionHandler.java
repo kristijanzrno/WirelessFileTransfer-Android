@@ -102,6 +102,9 @@ public class ConnectionHandler extends AsyncTask<String, Void, Void> {
                     case Constants.FILE_RECEIVED:
                         sendToActivity.onFileTransferred();
                         break;
+                    case Constants.FILE_TRANSFER_ERROR:
+                        sendToActivity.onFileTransferFailed(receivedMessage.paramAt(0));
+                        break;
                     case Constants.CONNECTION_TERMINATOR:
                         isRunning = false;
                         break;

@@ -14,6 +14,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.wirelessfiletransfer.Constants;
+import com.example.wirelessfiletransfer.CustomViews.CardDialog;
 import com.example.wirelessfiletransfer.Model.Device;
 import com.example.wirelessfiletransfer.R;
 import com.example.wirelessfiletransfer.SendToActivity;
@@ -54,6 +55,7 @@ public class FileTransfer extends AppCompatActivity implements SendToActivity {
 
     private int noOfFiles = 0;
     private int finished = 0;
+    private boolean hadErrors = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -102,10 +104,13 @@ public class FileTransfer extends AppCompatActivity implements SendToActivity {
     }
 
     private void updateStatus(){
+        finished++;
         runOnUiThread(() -> {
             statusTextView.setText(finished + "/" + noOfFiles + " Files Transferred...");
             if(noOfFiles == finished){
-                Toast.makeText(FileTransfer.this, "Successfully transferred " + noOfFiles + " files!", Toast.LENGTH_SHORT).show();
+                if(!hadErrors)
+                    Toast.makeText(FileTransfer.this, "Successfully transferred " + noOfFiles + " files!", Toast.LENGTH_SHORT).show();
+                else Toast.makeText(this, "Could not transfer some files...", Toast.LENGTH_SHORT).show();
                 noOfFiles = 0;
                 finished = 0;
                 switchView(false);
@@ -137,13 +142,20 @@ public class FileTransfer extends AppCompatActivity implements SendToActivity {
 
     @Override
     public void onFileTransferStarted(int noOfFiles) {
+        this.hadErrors = false;
         this.noOfFiles = noOfFiles;
         switchView(true);
     }
 
     @Override
     public void onFileTransferred() {
-        finished++;
+        updateStatus();
+    }
+
+    @Override
+    public void onFileTransferFailed(String filename) {
+        runOnUiThread(() -> CardDialog.showAlertDialog(FileTransfer.this, "Error", "Could not transfer " + filename));
+        this.hadErrors = true;
         updateStatus();
     }
 
@@ -155,7 +167,6 @@ public class FileTransfer extends AppCompatActivity implements SendToActivity {
 
     @Override
     public void onFileReceived() {
-        finished++;
         updateStatus();
     }
 

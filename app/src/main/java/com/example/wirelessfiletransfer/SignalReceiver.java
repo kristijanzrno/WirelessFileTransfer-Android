@@ -31,8 +31,6 @@ public class SignalReceiver extends AsyncTask<String, String, String> {
                 String data = new String(receivePacket.getData()).trim();
                 Message message = new Message(data);
                 if(message.getAction().equals(Constants.DEVICE_DISCOVERED)){
-                    //message = message.replace("disc_", "");
-                    //String[] data = message.split("::");
                     String ip = receivePacket.getSocketAddress().toString().split(":")[0];
                     String port = message.paramAt(1);
                     ip = ip.replaceAll("[^\\d.]", "");
