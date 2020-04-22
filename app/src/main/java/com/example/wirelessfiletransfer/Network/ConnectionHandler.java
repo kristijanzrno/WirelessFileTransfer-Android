@@ -73,6 +73,7 @@ public class ConnectionHandler extends AsyncTask<String, Void, Void> {
                         case "send_message":
                             break;
                         case "send_file":
+                            System.out.println(FileUtils.getFileName(action.getUri(), activity));
                             if(!FileHandler.readFile(activity, action.getUri(), output)) {
                                 sendMessage(Constants.FILE_TRANSFER_ERROR);
                                 sendToActivity.onFileTransferFailed(FileUtils.getFileName(action.getUri(), activity));
@@ -112,6 +113,7 @@ public class ConnectionHandler extends AsyncTask<String, Void, Void> {
                         break;
                     case Constants.FILE_RECEIVED:
                         sendToActivity.onFileTransferred();
+                        System.out.println("file transferred");
                         break;
                     case Constants.FILE_TRANSFER_ERROR:
                         sendToActivity.onFileTransferFailed(receivedMessage.paramAt(0));

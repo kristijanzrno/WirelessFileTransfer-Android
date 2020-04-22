@@ -24,11 +24,15 @@ public class FileUtils {
             try{
                 if(cursor != null && cursor.moveToFirst()){
                     result = cursor.getString(cursor.getColumnIndex(OpenableColumns.DISPLAY_NAME));
+                    String type = activity.getContentResolver().getType(uri).split("/")[1];
+                    if(type != null && !result.endsWith(type))
+                        result+= "." + type;
                 }
             }finally{
                 cursor.close();
             }
         }
+        System.out.println(uri.getPath());
         if(result == null){
             result = uri.getPath();
             int remove = result.lastIndexOf("/");

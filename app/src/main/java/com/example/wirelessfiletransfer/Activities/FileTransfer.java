@@ -93,7 +93,6 @@ public class FileTransfer extends AppCompatActivity implements SendToActivity {
     private void switchView(boolean working){
         runOnUiThread(() -> {
             if(working){
-                updateStatus();
                 statusView.setVisibility(View.VISIBLE);
                 emptyStateView.setVisibility(View.INVISIBLE);
             }else{
@@ -103,8 +102,9 @@ public class FileTransfer extends AppCompatActivity implements SendToActivity {
         });
     }
 
-    private void updateStatus(){
-        finished++;
+    private void updateStatus(boolean increase){
+        if(increase)
+            finished++;
         runOnUiThread(() -> {
             statusTextView.setText(finished + "/" + noOfFiles + " Files Transferred...");
             if(noOfFiles == finished){
@@ -145,29 +145,31 @@ public class FileTransfer extends AppCompatActivity implements SendToActivity {
         this.hadErrors = false;
         this.noOfFiles = noOfFiles;
         switchView(true);
+        updateStatus(false);
     }
 
     @Override
     public void onFileTransferred() {
-        updateStatus();
+        updateStatus(true);
     }
 
     @Override
     public void onFileTransferFailed(String filename) {
         runOnUiThread(() -> CardDialog.showAlertDialog(FileTransfer.this, "Error", "Could not transfer " + filename));
         this.hadErrors = true;
-        updateStatus();
+        updateStatus(true);
     }
 
     @Override
     public void onReceivingFiles(int noOfFiles) {
         this.noOfFiles = noOfFiles;
         switchView(true);
+        updateStatus(false);
     }
 
     @Override
     public void onFileReceived() {
-        updateStatus();
+        updateStatus(true);
     }
 
     private void transferFiles(ArrayList<Uri> uris){
