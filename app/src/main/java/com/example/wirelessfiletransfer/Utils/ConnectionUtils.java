@@ -2,6 +2,7 @@ package com.example.wirelessfiletransfer.Utils;
 
 import android.app.Activity;
 import android.net.Uri;
+import android.os.Build;
 
 import com.example.wirelessfiletransfer.Network.ConnectionHandler;
 import com.example.wirelessfiletransfer.Constants;
@@ -37,11 +38,24 @@ public class ConnectionUtils {
     }
 
     public void connect(){
-        connectionHandler.connect(device);
+        Device android = new Device();
+        android.setName(getDeviceName());
+        connectionHandler.connect(android);
     }
 
     public void terminateConnection(){
         connectionHandler.endConnection();
     }
+
+    public String getDeviceName() {
+        String manufacturer = Build.MANUFACTURER;
+        String model = Build.MODEL;
+        if (model.toLowerCase().startsWith(manufacturer.toLowerCase())) {
+            return model;
+        } else {
+            return manufacturer + " " + model;
+        }
+    }
+
 
 }
