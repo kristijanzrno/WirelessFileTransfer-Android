@@ -36,14 +36,15 @@ public class DeviceDiscoveryAdapter extends RecyclerView.Adapter<DeviceDiscovery
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
+        Device device = devices.get(position);
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                System.out.println("hello");
-                discoveryUtils.onDeviceSelected(devices.get(position));
+                discoveryUtils.onDeviceSelected(device);
             }
         });
-        holder.deviceIP.setText(devices.get(position).getName());
+        holder.deviceName.setText(device.getName());
+        holder.deviceInfo.setText(device.getInfo() + " | " + device.getAvailable());
     }
 
     @Override
@@ -53,8 +54,10 @@ public class DeviceDiscoveryAdapter extends RecyclerView.Adapter<DeviceDiscovery
 
     public class ViewHolder extends RecyclerView.ViewHolder{
 
-        @BindView(R.id.device_ip)
-        TextView deviceIP;
+        @BindView(R.id.device_name)
+        TextView deviceName;
+        @BindView(R.id.device_info)
+        TextView deviceInfo;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
