@@ -43,29 +43,43 @@
                     android:layout_centerHorizontal="true"
                     android:layout_marginBottom="30sp"
                     />
-                    <com.skyfishjy.library.RippleBackground
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:id="@+id/discovery_scan_icon"
-                        app:rb_color="@color/gBlue"
-                        app:rb_radius="12dp"
-                        app:rb_rippleAmount="4"
-                        app:rb_duration="6000"
-                        app:rb_scale="3"
-                        android:layout_toRightOf="@id/headerTitle"
-                        android:layout_marginTop="30sp">
+
+
                 <ImageView
-                    android:layout_width="18sp"
-                    android:layout_height="18sp"
-                    android:src="@drawable/ic_smartphone"
-                    android:tint="#FFF"
-                    android:layout_marginLeft="20sp"
+                    android:id="@+id/qrButton"
+                    android:layout_width="25sp"
+                    android:layout_height="25sp"
+                    android:src="@drawable/ic_camera"
+                    android:tint="@color/gBlue"
                     android:layout_centerVertical="true"
-                    android:layout_centerHorizontal="true"/>
-                    </com.skyfishjy.library.RippleBackground>
+                    android:layout_toRightOf="@id/headerTitle"
+                    android:layout_marginLeft="30sp"
+                    android:layout_marginBottom="30sp"
+                    android:layout_alignParentBottom="true"/>
 
         </RelativeLayout>
         </androidx.cardview.widget.CardView>
+
+    <com.skyfishjy.library.RippleBackground
+        android:layout_width="match_parent"
+        android:layout_height="70sp"
+        android:id="@+id/discovery_scan_icon"
+        app:rb_color="@color/gBlue"
+        app:rb_radius="12dp"
+        app:rb_rippleAmount="4"
+        app:rb_duration="6000"
+        app:rb_scale="3"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="25sp">
+        <ImageView
+            android:layout_width="18sp"
+            android:layout_height="18sp"
+            android:src="@drawable/ic_smartphone"
+            android:tint="#FFF"
+            android:layout_marginLeft="20sp"
+            android:layout_centerVertical="true"
+            android:layout_centerHorizontal="true"/>
+    </com.skyfishjy.library.RippleBackground>
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/discoveryRecyclerView"

@@ -1,6 +1,7 @@
 package com.example.wirelessfiletransfer;
 
 public class Constants {
+    public static final int QR_SCANNER_REQUEST = 2;
     public static final int FILE_PICKER_REQUEST = 4;
     public static final int FILE_TRANSFER_ACTIVITY_REQUEST = 5;
 

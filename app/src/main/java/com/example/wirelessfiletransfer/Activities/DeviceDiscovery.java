@@ -8,14 +8,18 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.Toast;
 
 import com.example.wirelessfiletransfer.Adapters.DeviceDiscoveryAdapter;
 import com.example.wirelessfiletransfer.Constants;
 import com.example.wirelessfiletransfer.CustomViews.CardDialog;
+import com.example.wirelessfiletransfer.Model.Message;
 import com.example.wirelessfiletransfer.Network.DiscoveryService;
 import com.example.wirelessfiletransfer.DiscoveryUtils;
 import com.example.wirelessfiletransfer.Model.Device;
 import com.example.wirelessfiletransfer.R;
+import com.google.zxing.integration.android.IntentIntegrator;
+import com.google.zxing.integration.android.IntentResult;
 import com.skyfishjy.library.RippleBackground;
 
 import java.util.ArrayList;
@@ -78,6 +82,17 @@ public class DeviceDiscovery extends AppCompatActivity implements DiscoveryUtils
         startActivity(i);
     }
 
+
+    @OnClick(R.id.qrButton)
+    public void openQRScanner(View v){
+        IntentIntegrator integrator = new IntentIntegrator(this);
+        integrator.setDesiredBarcodeFormats(IntentIntegrator.QR_CODE);
+        integrator.setCameraId(0);
+        integrator.setBeepEnabled(false);
+        integrator.setBarcodeImageEnabled(false);
+        integrator.initiateScan();
+    }
+
     @Override
     public void onDeviceDiscovered(Device device) {
         Device existingDevice = devices.stream().filter(o -> o.getIp().equals(device.getIp())).findFirst().orElse(null);
@@ -116,6 +131,16 @@ public class DeviceDiscovery extends AppCompatActivity implements DiscoveryUtils
         super.onActivityResult(requestCode, resultCode, data);
         if(requestCode == Constants.FILE_TRANSFER_ACTIVITY_REQUEST && resultCode == RESULT_CANCELED) {
             CardDialog.showAlertDialog(DeviceDiscovery.this, "Lost Connection", "The connection between devices has been interrupted.");
+        }else if(resultCode == RESULT_OK){
+            Toast.makeText(this, "result!=null", Toast.LENGTH_SHORT).show();
+            IntentResult result = IntentIntegrator.parseActivityResult(requestCode, resultCode, data);
+            if(result != null && result.getContents() != null){
+                Toast.makeText(this, result.getContents(), Toast.LENGTH_SHORT).show();
+                System.out.println(result.getContents());
+                String response[] = Message.decodeMessage(result.getContents());
+                Device device = new Device(response[0], response[1], Integer.parseInt(response[2]), response[3], response[4]);
+                onDeviceSelected(device);
+            }
         }
     }
 
