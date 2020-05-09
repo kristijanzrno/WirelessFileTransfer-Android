@@ -104,22 +104,22 @@ public class ConnectionHandler extends AsyncTask<String, Void, Void> {
                     case Constants.FILE_NAME_MESSAGE:
                         String filename = receivedMessage.paramAt(0);
                         long fileSize = Long.parseLong(receivedMessage.paramAt(1));
-                        if (FileHandler.writeFile(activity, filename, fileSize, input))
+                        if (FileHandler.writeFile(activity, filename, fileSize, input)) {
+                            sendMessage(Constants.FILE_RECEIVED);
                             sendToActivity.onFileReceived();
-                        else{
+                        }else{
                             sendMessage(new Message.Builder().add(Constants.FILE_TRANSFER_ERROR).add(filename).build());
                             sendToActivity.onFileTransferFailed(filename);
                         }
                         break;
                     case Constants.FILE_RECEIVED:
                         sendToActivity.onFileTransferred();
-                        System.out.println("file transferred");
                         break;
                     case Constants.FILE_TRANSFER_ERROR:
                         sendToActivity.onFileTransferFailed(receivedMessage.paramAt(0));
                         break;
                     case Constants.CONNECTION_TERMINATOR:
-                        isRunning = false;
+                        terminateConnection(true);
                         break;
                     case Constants.CONNECTION_ACCEPTED:
                         sendToActivity.onDeviceConnected();
