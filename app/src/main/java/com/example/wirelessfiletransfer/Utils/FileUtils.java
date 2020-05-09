@@ -26,7 +26,7 @@ public class FileUtils {
                 if (cursor != null && cursor.moveToFirst()) {
                     result = cursor.getString(cursor.getColumnIndex(OpenableColumns.DISPLAY_NAME));
                     String type = activity.getContentResolver().getType(uri).split("/")[1];
-                    if (type != null && !result.endsWith(type))
+                    if (type != null && !result.endsWith(type) && !result.contains("."))
                         result += "." + type;
                 }
             } finally {

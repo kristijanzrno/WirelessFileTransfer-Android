@@ -27,7 +27,6 @@ public class ConnectionUtils {
 
     public void transferFiles(ArrayList<Uri> uris){
         // Preparing the server to receive n files
-        //connectionHandler.sendMessage(Constants.FILE_SEND_MESSAGE + Constants.DATA_SEPARATOR + uris.size());
         String[] message = {Constants.FILE_SEND_MESSAGE, uris.size() + ""};
         connectionHandler.sendMessage(new Message.Builder().add(Constants.FILE_SEND_MESSAGE).add(uris.size()+"").build());
         for(Uri uri : uris){
