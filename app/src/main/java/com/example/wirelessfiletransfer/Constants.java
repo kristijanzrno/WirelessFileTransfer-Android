@@ -18,6 +18,9 @@ public class Constants {
     public static final String DISCOVERY_BROADCAST = "discovery@";
     public static final String DEVICE_DISCOVERED = "_disc";
 
+    public static final int[] DESKTOP_DISCOVERY_PORTS = {51423, 49324, 60321, 52300};
+
+
     // Network Broadcasts
     public static final int BROADCAST_WAIT_TIME = 3000;
     // Shared Preferences Keys

@@ -10,6 +10,7 @@ import java.net.DatagramSocket;
 import java.net.InetAddress;
 import java.net.InterfaceAddress;
 import java.net.NetworkInterface;
+import java.net.UnknownHostException;
 import java.util.Enumeration;
 
 public class SignalBroadcaster extends AsyncTask<String, String, String> {
@@ -34,8 +35,10 @@ public class SignalBroadcaster extends AsyncTask<String, String, String> {
                     break;
                 }
                 byte[] discoveryRequest = (Constants.DISCOVERY_BROADCAST+localReceiverPort).getBytes();
-                DatagramPacket packet = new DatagramPacket(discoveryRequest, discoveryRequest.length, InetAddress.getByName("255.255.255.255"), 8899);
-                socket.send(packet);
+                DatagramPacket[] packets = assemblePackets(discoveryRequest);
+                for(DatagramPacket packet : packets) {
+                    socket.send(packet);
+                }
                 Enumeration networkInterfaces = NetworkInterface.getNetworkInterfaces();
                 while (networkInterfaces.hasMoreElements()) {
                     NetworkInterface networkInterface = (NetworkInterface) networkInterfaces.nextElement();
@@ -48,7 +51,9 @@ public class SignalBroadcaster extends AsyncTask<String, String, String> {
                             continue;
                         }
                         try {
-                            socket.send(packet);
+                            for(DatagramPacket packet : packets) {
+                                socket.send(packet);
+                            }
                         }catch(Exception e){
                             e.printStackTrace();
                         }
@@ -61,5 +66,15 @@ public class SignalBroadcaster extends AsyncTask<String, String, String> {
             e.printStackTrace();
         }
         return null;
+    }
+
+    private DatagramPacket[] assemblePackets(byte[] message) throws UnknownHostException {
+        DatagramPacket[] packets = new DatagramPacket[Constants.DESKTOP_DISCOVERY_PORTS.length];
+        int counter = 0;
+        for(int port : Constants.DESKTOP_DISCOVERY_PORTS){
+            packets[counter] = new DatagramPacket(message, message.length, InetAddress.getByName("255.255.255.255"), port);
+            counter++;
+        }
+        return packets;
     }
 }

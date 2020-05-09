@@ -7,6 +7,7 @@ import android.database.Cursor;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Environment;
+import android.os.Message;
 import android.provider.DocumentsContract;
 import android.provider.MediaStore;
 import android.provider.OpenableColumns;
@@ -17,26 +18,26 @@ import java.io.File;
 public class FileUtils {
 
     // https://developer.android.com/guide/topics/providers/document-provider.html
-    public static String getFileName(Uri uri, Activity activity){
+    public static String getFileName(Uri uri, Activity activity) {
         String result = null;
-        if(uri.getScheme().equals("content")){
+        if (uri.getScheme().equals("content")) {
             Cursor cursor = activity.getContentResolver().query(uri, null, null, null, null);
-            try{
-                if(cursor != null && cursor.moveToFirst()){
+            try {
+                if (cursor != null && cursor.moveToFirst()) {
                     result = cursor.getString(cursor.getColumnIndex(OpenableColumns.DISPLAY_NAME));
                     String type = activity.getContentResolver().getType(uri).split("/")[1];
-                    if(type != null && !result.endsWith(type))
-                        result+= "." + type;
+                    if (type != null && !result.endsWith(type))
+                        result += "." + type;
                 }
-            }finally{
+            } finally {
                 cursor.close();
             }
         }
         System.out.println(uri.getPath());
-        if(result == null){
+        if (result == null) {
             result = uri.getPath();
             int remove = result.lastIndexOf("/");
-            if(remove != -1) {
+            if (remove != -1) {
                 result = result.substring(remove + 1);
             }
         }
@@ -44,23 +45,23 @@ public class FileUtils {
     }
 
     // https://developer.android.com/training/secure-file-sharing/retrieve-info#java
-    public static long getFileSize(Uri uri, Activity activity){
+    public static long getFileSize(Uri uri, Activity activity) {
         long result = 0;
         Cursor cursor = activity.getContentResolver().query(uri, null, null, null, null);
-        if(cursor != null && cursor.moveToFirst())
+        if (cursor != null && cursor.moveToFirst())
             result = cursor.getLong(cursor.getColumnIndex(OpenableColumns.SIZE));
         return result;
     }
 
-    public static String getStoragePath(Context context){
+    public static String getStoragePath(Context context) {
         String storagePath = "";
         // Android 10 makes it harder to access the root of the internal storage,
         // The only initial file access point is the application directory
         // Therefore, the application directory needs to be exited couple of times to get to the root
-        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q){
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
             storagePath = context.getExternalFilesDir(null).getParentFile().
                     getParentFile().getParentFile().getParentFile().getAbsolutePath();
-        }else{
+        } else {
             // Else use the old convenient Environment
             storagePath = Environment.getExternalStorageDirectory().getAbsolutePath();
         }
@@ -68,9 +69,7 @@ public class FileUtils {
     }
 
 
-
-
-    public static String getMimeType(String filename){
+    public static String getMimeType(String filename) {
         String mimeType = "";
         int in = filename.lastIndexOf(".");
         String extension = filename.substring(in + 1).toLowerCase();
@@ -80,10 +79,29 @@ public class FileUtils {
     }
 
     public static void addToMediaStore(Context context, File file) {
+        String dataPath="";
+        String mimeTypePath="";
+        Uri externalContentUriPath = null;
         ContentValues values = new ContentValues();
-        values.put(MediaStore.Images.Media.DATA, file.getAbsolutePath());
-        values.put(MediaStore.Images.Media.MIME_TYPE, getMimeType(file.getName()));
-        context.getContentResolver().insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, values);
+        String mimeType = getMimeType(file.getName());
+        if (mimeType.contains("image") ) {
+            dataPath = MediaStore.Images.Media.DATA;
+            mimeTypePath = MediaStore.Images.Media.MIME_TYPE;
+            externalContentUriPath = MediaStore.Images.Media.EXTERNAL_CONTENT_URI;
+        }else if(mimeType.contains("video")){
+            dataPath = MediaStore.Video.Media.DATA;
+            mimeTypePath = MediaStore.Video.Media.MIME_TYPE;
+            externalContentUriPath = MediaStore.Video.Media.EXTERNAL_CONTENT_URI;
+        }else if(mimeType.contains("audio")){
+            dataPath = MediaStore.Audio.Media.DATA;
+            mimeTypePath = MediaStore.Audio.Media.MIME_TYPE;
+            externalContentUriPath = MediaStore.Audio.Media.EXTERNAL_CONTENT_URI;
+        }
+        if(externalContentUriPath != null) {
+            values.put(dataPath, file.getAbsolutePath());
+            values.put(mimeTypePath, mimeType);
+            context.getContentResolver().insert(externalContentUriPath, values);
+        }
     }
 
     // Using android:requestLegacyExternalStorage="true"
@@ -92,23 +110,24 @@ public class FileUtils {
 
     // Application only allows writing on internal storage at the moment (SD cards are not supported yet)
     // Path to URI for SDK versions above 19
-    public static String getFolderPathFromUri(Context context, Uri uri){
-        if(isExternalStorageDocument(uri)) {
+    public static String getFolderPathFromUri(Context context, Uri uri) {
+        if (isExternalStorageDocument(uri)) {
             String uriSegment = uri.getLastPathSegment();
             String storage = getStoragePath(context);
             String[] splitURI = uriSegment.split(":");
             String type = splitURI[0];
-            if("home".equalsIgnoreCase(type)){
+            if ("home".equalsIgnoreCase(type)) {
                 //home: equals to the Documents folder
                 storage += "/Documents/";
-            } else if ("primary".equalsIgnoreCase(type)){
+            } else if ("primary".equalsIgnoreCase(type)) {
                 //other folders on internal storage
                 storage += "/";
-            }else{
+            } else {
                 return null;
             }
-            if(splitURI.length > 1)
-                storage += splitURI[1];;
+            if (splitURI.length > 1)
+                storage += splitURI[1];
+            ;
             return storage;
         }
         return null;
